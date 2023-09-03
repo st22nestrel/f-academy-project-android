@@ -31,6 +31,8 @@ class ApplicationModule {
         }
     }
 
+    
+
     // TODO Step 1 - provide SharedPreferences reference
     // Create method that provides SP reference. You can use default or your own
     // Hint: You need to use @Provides and @ApplicationContext annotations as above
