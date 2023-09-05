@@ -22,7 +22,7 @@ class HomeViewModel @Inject constructor(
 
         getTanksFlowUseCase.execute {
             onNext {
-                Timber.d("Cultural places: $it")
+                Timber.d("Tanks: $it")
 
                 viewState.tanks = it.toPersistentList()
             }

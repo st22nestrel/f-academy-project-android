@@ -23,13 +23,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.core.net.toUri
 import app.futured.academyproject.data.model.local.Place
 import app.futured.academyproject.data.model.local.Tank
 import app.futured.academyproject.tools.preview.PlacesProvider
+import app.futured.academyproject.tools.preview.TanksProvider
 import app.futured.academyproject.ui.theme.Grid
+import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import kotlinx.collections.immutable.PersistentList
@@ -48,17 +52,20 @@ fun TankCard(tank: Tank, onClick: (Int) -> Unit, modifier: Modifier = Modifier) 
             modifier = Modifier
                 .size(Grid.d15),
         ) {
+            /*AsyncImage(
+                model = tank.bigIcon,
+                contentDescription = "tank image",
+            )*/
             Image(
                 painter = rememberAsyncImagePainter(
                     ImageRequest.Builder(LocalContext.current)
-                        .data(tank.bigIcon)
-                        .crossfade(true)
+                        .data(tank.smallIcon.toUri())
                         .build(),
                 ),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .aspectRatio(1f),
+                contentDescription = tank.bigIcon,
+                //contentScale = ContentScale.Crop,
+//                modifier = Modifier
+//                    .aspectRatio(1f),
             )
         }
 
@@ -95,14 +102,14 @@ fun TankCard(tank: Tank, onClick: (Int) -> Unit, modifier: Modifier = Modifier) 
     }
 }
 
-//@Preview
-//@Composable
-//private fun PlaceCardPreview(@PreviewParameter(PlacesProvider::class) places: PersistentList<Place>) = Showcase {
-//    PlaceCard(place = places.first(), onClick = {})
-//}
-//
-//@Preview
-//@Composable
-//private fun PlaceCardPreview2(@PreviewParameter(PlacesProvider::class) places: PersistentList<Place>) = Showcase {
-//    PlaceCard(place = places.first().copy(isFavourite = true), onClick = {})
-//}
+@Preview
+@Composable
+private fun PlaceCardPreview(@PreviewParameter(TanksProvider::class) tanks: PersistentList<Tank>) = Showcase {
+    TankCard(tank = tanks.first(), onClick = {})
+}
+
+@Preview
+@Composable
+private fun PlaceCardPreview2(@PreviewParameter(TanksProvider::class) tanks: PersistentList<Tank>) = Showcase {
+    TankCard(tank = tanks.first().copy(isFavourite = true), onClick = {})
+}

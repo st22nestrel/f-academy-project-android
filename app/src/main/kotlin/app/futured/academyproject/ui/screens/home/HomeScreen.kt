@@ -39,6 +39,7 @@ import app.futured.academyproject.tools.arch.EventsEffect
 import app.futured.academyproject.tools.arch.onEvent
 import app.futured.academyproject.tools.compose.ScreenPreviews
 import app.futured.academyproject.tools.preview.PlacesProvider
+import app.futured.academyproject.tools.preview.TanksProvider
 import app.futured.academyproject.ui.components.PlaceCard
 import app.futured.academyproject.ui.components.Showcase
 import app.futured.academyproject.ui.components.TankCard
@@ -196,39 +197,39 @@ object Home {
     }
 }
 
-//@ScreenPreviews
-//@Composable
-//private fun HomeContentPreview(@PreviewParameter(PlacesProvider::class) places: PersistentList<Place>) {
-//    Showcase {
-//        Home.Content(
-//            Home.PreviewActions,
-//            places,
-//            error = null,
-//        )
-//    }
-//}
-//
-//@ScreenPreviews
-//@Composable
-//private fun HomeContentWithErrorPreview() {
-//    Showcase {
-//        Home.Content(
-//            Home.PreviewActions,
-//            places = persistentListOf(),
-//            error = IllegalStateException("Test"),
-//        )
-//    }
-//}
-//
-//@ScreenPreviews
-//@Composable
-//private fun HomeContentWithLoadingPreview() {
-//    Showcase {
-//        Home.Content(
-//            Home.PreviewActions,
-//            places = persistentListOf(),
-//            error = null,
-//        )
-//    }
-//}
+@ScreenPreviews
+@Composable
+private fun HomeContentPreview(@PreviewParameter(TanksProvider::class) tanks: PersistentList<Tank>) {
+    Showcase {
+        Home.Content(
+            Home.PreviewActions,
+            tanks,
+            error = null,
+        )
+    }
+}
+
+@ScreenPreviews
+@Composable
+private fun HomeContentWithErrorPreview() {
+    Showcase {
+        Home.Content(
+            Home.PreviewActions,
+            tanks = persistentListOf(),
+            error = IllegalStateException("Test"),
+        )
+    }
+}
+
+@ScreenPreviews
+@Composable
+private fun HomeContentWithLoadingPreview() {
+    Showcase {
+        Home.Content(
+            Home.PreviewActions,
+            tanks = persistentListOf(),
+            error = null,
+        )
+    }
+}
 

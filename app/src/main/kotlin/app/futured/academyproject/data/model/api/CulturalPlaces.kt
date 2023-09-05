@@ -5,6 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class CulturalPlaces(
-    @SerialName("type") val type: String,
+    @SerialName("status") val type: String,
     @SerialName("features") val features: List<Feature>,
 )
