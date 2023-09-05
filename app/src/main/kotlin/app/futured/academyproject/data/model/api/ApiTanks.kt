@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class CulturalPlaces(
-    @SerialName("status") val type: String,
-    @SerialName("features") val features: List<Feature>,
+data class ApiTanks(
+    @SerialName("status") val status: String,
+    @SerialName("data") val data: Map<String, ApiTank>,
 )

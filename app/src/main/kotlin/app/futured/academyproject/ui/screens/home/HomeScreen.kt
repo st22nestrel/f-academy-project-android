@@ -33,13 +33,16 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import app.futured.academyproject.R
 import app.futured.academyproject.data.model.local.Place
+import app.futured.academyproject.data.model.local.Tank
 import app.futured.academyproject.navigation.NavigationDestinations
 import app.futured.academyproject.tools.arch.EventsEffect
 import app.futured.academyproject.tools.arch.onEvent
 import app.futured.academyproject.tools.compose.ScreenPreviews
 import app.futured.academyproject.tools.preview.PlacesProvider
+import app.futured.academyproject.tools.preview.TanksProvider
 import app.futured.academyproject.ui.components.PlaceCard
 import app.futured.academyproject.ui.components.Showcase
+import app.futured.academyproject.ui.components.TankCard
 import app.futured.academyproject.ui.theme.Grid
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
@@ -58,7 +61,7 @@ fun HomeScreen(
 
         Home.Content(
             viewModel,
-            viewState.places,
+            viewState.tanks,
             viewState.error,
         )
     }
@@ -79,7 +82,7 @@ object Home {
     @Composable
     fun Content(
         actions: Actions,
-        places: PersistentList<Place>,
+        tanks: PersistentList<Tank>,
         error: Throwable?,
         modifier: Modifier = Modifier,
     ) {
@@ -95,10 +98,10 @@ object Home {
                     error != null -> {
                         Error(onTryAgain = actions::tryAgain)
                     }
-                    places.isEmpty() -> {
+                    tanks.isEmpty() -> {
                         Loading()
                     }
-                    places.isNotEmpty() -> {
+                    tanks.isNotEmpty() -> {
                         LazyColumn(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             contentPadding = innerPadding,
@@ -106,9 +109,9 @@ object Home {
                             modifier = Modifier
                                 .fillMaxSize(),
                         ) {
-                            items(places) { place ->
-                                PlaceCard(
-                                    place = place,
+                            items(tanks) { tank ->
+                                TankCard(
+                                    tank = tank,
                                     onClick = actions::navigateToDetailScreen,
                                 )
                             }
@@ -196,11 +199,11 @@ object Home {
 
 @ScreenPreviews
 @Composable
-private fun HomeContentPreview(@PreviewParameter(PlacesProvider::class) places: PersistentList<Place>) {
+private fun HomeContentPreview(@PreviewParameter(TanksProvider::class) tanks: PersistentList<Tank>) {
     Showcase {
         Home.Content(
             Home.PreviewActions,
-            places,
+            tanks,
             error = null,
         )
     }
@@ -212,7 +215,7 @@ private fun HomeContentWithErrorPreview() {
     Showcase {
         Home.Content(
             Home.PreviewActions,
-            places = persistentListOf(),
+            tanks = persistentListOf(),
             error = IllegalStateException("Test"),
         )
     }
@@ -224,7 +227,7 @@ private fun HomeContentWithLoadingPreview() {
     Showcase {
         Home.Content(
             Home.PreviewActions,
-            places = persistentListOf(),
+            tanks = persistentListOf(),
             error = null,
         )
     }

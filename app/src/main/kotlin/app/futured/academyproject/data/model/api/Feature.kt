@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Feature(
-    @SerialName("id") val id: String? = null,
+    @SerialName("id") val id: String,
     @SerialName("type") val type: String,
     @SerialName("geometry") val geometry: Geometry? = null,
     @SerialName("properties") val properties: Properties,
