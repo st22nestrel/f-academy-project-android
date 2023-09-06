@@ -8,6 +8,6 @@ interface Constants {
     }
 
     object Args {
-        const val PLACE_ID = "placeId"
+        const val TANK_ID = "tankId"
     }
 }

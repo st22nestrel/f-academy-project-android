@@ -10,7 +10,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.navArgument
-import app.futured.academyproject.tools.Constants.Args.PLACE_ID
+import app.futured.academyproject.tools.Constants.Args.TANK_ID
 
 typealias DestinationArgumentKey = String
 typealias DestinationArgumentValue = String
@@ -22,15 +22,15 @@ sealed class Destination(
 ) {
     object Home : Destination(route = "home")
     object Detail : Destination(
-        route = "detail/{$PLACE_ID}",
+        route = "detail/{$TANK_ID}",
         arguments = listOf(
-            navArgument(PLACE_ID) {
+            navArgument(TANK_ID) {
                 type = NavType.IntType
             },
         ),
     ) {
         fun buildRoute(placeId: Int): String = route
-            .withArgument(PLACE_ID, placeId.toString())
+            .withArgument(TANK_ID, placeId.toString())
     }
 }
 

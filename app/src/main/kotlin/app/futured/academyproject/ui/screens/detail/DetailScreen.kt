@@ -1,6 +1,8 @@
 package app.futured.academyproject.ui.screens.detail
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
@@ -27,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.hilt.navigation.compose.hiltViewModel
 import app.futured.academyproject.data.model.local.Place
@@ -131,34 +134,82 @@ object Detail {
                         .padding(contentPadding)
                         .fillMaxHeight(),
                 ) {
-                    Image(
-                        painter = rememberAsyncImagePainter(
-                            ImageRequest.Builder(LocalContext.current)
-                                .data(tank.bigIcon.replace("http", "https"))
-                                .build(),
-                        ),
-                        contentDescription = tank.bigIcon,
-                        contentScale = ContentScale.FillWidth,
-                        //modifier = Modifier.aspectRatio(1f),
-                    )
-
-                    Card(
+                    Row (
+                        verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
-                            .size(Grid.d30),
+                            .padding(vertical = Grid.d2, horizontal = Grid.d2)
                     ) {
-                        Image(
-                            painter = rememberAsyncImagePainter(
-                                ImageRequest.Builder(LocalContext.current)
-                                    .data(tank.bigIcon.replace("http", "https"))
-                                    .build(),
-                            ),
-                            contentDescription = tank.bigIcon,
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier.aspectRatio(1f),
-                        )
+                        Card(
+                            modifier = Modifier
+                                .size(Grid.d30),
+                        ) {
+                            Image(
+                                painter = rememberAsyncImagePainter(
+                                    ImageRequest.Builder(LocalContext.current)
+                                        .data(tank.bigIcon.replace("http", "https"))
+                                        .build(),
+                                ),
+                                contentDescription = tank.bigIcon,
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier.aspectRatio(1f),
+                            )
+                        }
+
+                        Column(
+                            verticalArrangement = Arrangement.Center,
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(vertical = Grid.d2, horizontal = Grid.d4),
+                        ) {
+                            Text(
+                                text = "Name:",
+                                style = MaterialTheme.typography.titleLarge,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis,
+                            )
+                            Text(
+                                text = "Type:",
+                            )
+                            Text(
+                                text = "Tier:",
+                            )
+                            Text(
+                                text = "Nation:",
+                            )
+                        }
+
+                        Column(
+                            verticalArrangement = Arrangement.Center,
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(vertical = Grid.d2, horizontal = Grid.d4),
+                        ) {
+                            Text(
+                                text = tank.name,
+                                style = MaterialTheme.typography.titleLarge,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis,
+                            )
+                            Text(
+                                text = tank.tankType,
+                            )
+                            Text(
+                                text = tank.tier.toString(),
+                            )
+                            Text(
+                                text = tank.nation,
+                            )
+                        }
                     }
-                    Text(text = tank.name)
-                    Text(text = tank.description)
+
+                    Text(
+                        text = tank.description,
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.padding(vertical = Grid.d4, horizontal = Grid.d2)
+                    )
 
                 }
             }

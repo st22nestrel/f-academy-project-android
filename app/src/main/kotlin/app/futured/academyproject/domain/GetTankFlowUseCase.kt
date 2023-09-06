@@ -15,7 +15,7 @@ class GetTankFlowUseCase @Inject constructor(
 ) : FlowUseCase<GetTankFlowUseCase.Args, Tank>() {
 
     override fun build(args: Args): Flow<Tank> = persistence.observeTankIds().map { favouriteTanks ->
-        val apiTank = tanksStore.getTank(args.tankId) ?: throw IllegalArgumentException("Place with id ${args.tankId} not found")
+        val apiTank = tanksStore.getTank(args.tankId) ?: throw IllegalArgumentException("Tank with id ${args.tankId} not found")
         apiTank.mapToTank( apiTank.id in favouriteTanks)
     }
 
