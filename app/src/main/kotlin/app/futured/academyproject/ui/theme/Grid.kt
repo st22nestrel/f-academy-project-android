@@ -16,4 +16,6 @@ object Grid {
     val d9 = 36.dp
     val d10 = 40.dp
     val d15 = 60.dp
+    val d20 = 80.dp
+    val d30 = 120.dp
 }

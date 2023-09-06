@@ -59,13 +59,13 @@ fun TankCard(tank: Tank, onClick: (Int) -> Unit, modifier: Modifier = Modifier) 
             Image(
                 painter = rememberAsyncImagePainter(
                     ImageRequest.Builder(LocalContext.current)
-                        .data(tank.smallIcon.toUri())
+                        .data(tank.bigIcon.replace("http", "https"))
                         .build(),
                 ),
                 contentDescription = tank.bigIcon,
-                //contentScale = ContentScale.Crop,
-//                modifier = Modifier
-//                    .aspectRatio(1f),
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .aspectRatio(1f),
             )
         }
 
@@ -77,7 +77,7 @@ fun TankCard(tank: Tank, onClick: (Int) -> Unit, modifier: Modifier = Modifier) 
         ) {
             Text(
                 text = tank.name,
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onSurface,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
@@ -85,12 +85,36 @@ fun TankCard(tank: Tank, onClick: (Int) -> Unit, modifier: Modifier = Modifier) 
             Spacer(modifier = Modifier.height(Grid.d1))
             Text(
                 text = tank.tankType,
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
         }
+
+        Column(
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .weight(1f)
+                .padding(vertical = Grid.d2, horizontal = Grid.d4),
+        ) {
+            Text(
+                text = tank.tier.toString(),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+            Spacer(modifier = Modifier.height(Grid.d1))
+            Text(
+                text = tank.nation,
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
+
         if (tank.isFavourite) {
 
             Icon(

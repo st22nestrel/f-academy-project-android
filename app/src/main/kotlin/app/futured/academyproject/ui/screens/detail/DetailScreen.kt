@@ -1,12 +1,20 @@
 package app.futured.academyproject.ui.screens.detail
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -17,13 +25,23 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.hilt.navigation.compose.hiltViewModel
 import app.futured.academyproject.data.model.local.Place
+import app.futured.academyproject.data.model.local.Tank
 import app.futured.academyproject.navigation.NavigationDestinations
 import app.futured.academyproject.tools.arch.EventsEffect
 import app.futured.academyproject.tools.arch.onEvent
 import app.futured.academyproject.tools.compose.ScreenPreviews
+import app.futured.academyproject.tools.preview.TanksProvider
 import app.futured.academyproject.ui.components.Showcase
+import app.futured.academyproject.ui.theme.Grid
+import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
+import kotlinx.collections.immutable.PersistentList
 
 @Composable
 fun DetailScreen(
@@ -39,7 +57,7 @@ fun DetailScreen(
 
         Detail.Content(
             this,
-            viewState.place,
+            viewState.tank,
         )
     }
 }
@@ -60,15 +78,15 @@ object Detail {
     @Composable
     fun Content(
         actions: Actions,
-        place: Place?,
+        tank: Tank?,
         modifier: Modifier = Modifier,
     ) {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text(text = "DetailScreen") },
+                    title = { Text(text = "Info about ${tank?.shortName}") },
                     actions = {
-                            val (iconRes, iconColor) = if (place?.isFavourite == true) {
+                            val (iconRes, iconColor) = if (tank?.isFavourite == true) {
                                 Icons.Filled.Favorite to MaterialTheme.colorScheme.error
                             } else {
                                 Icons.Filled.FavoriteBorder to MaterialTheme.colorScheme.onSurface
@@ -95,14 +113,53 @@ object Detail {
             },
             modifier = modifier,
         ) { contentPadding ->
-            place?.let {
+            tank?.let {
+//                Card(
+//                    colors = CardDefaults.cardColors(),
+//                    modifier = Modifier
+//                        .size(Grid.d15),
+//                ){
+//
+//                }
+//                Row {
+//
+//                    Text(text = tank.name)
+//                }
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
                         .padding(contentPadding)
-                        .fillMaxSize(),
+                        .fillMaxHeight(),
                 ) {
-                    Text(text = place.name)
+                    Image(
+                        painter = rememberAsyncImagePainter(
+                            ImageRequest.Builder(LocalContext.current)
+                                .data(tank.bigIcon.replace("http", "https"))
+                                .build(),
+                        ),
+                        contentDescription = tank.bigIcon,
+                        contentScale = ContentScale.FillWidth,
+                        //modifier = Modifier.aspectRatio(1f),
+                    )
+
+                    Card(
+                        modifier = Modifier
+                            .size(Grid.d30),
+                    ) {
+                        Image(
+                            painter = rememberAsyncImagePainter(
+                                ImageRequest.Builder(LocalContext.current)
+                                    .data(tank.bigIcon.replace("http", "https"))
+                                    .build(),
+                            ),
+                            contentDescription = tank.bigIcon,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.aspectRatio(1f),
+                        )
+                    }
+                    Text(text = tank.name)
+                    Text(text = tank.description)
+
                 }
             }
         }
@@ -111,11 +168,11 @@ object Detail {
 
 @ScreenPreviews
 @Composable
-fun DetailContentPreview() {
+private fun DetailContentPreview(@PreviewParameter(TanksProvider::class) tanks: PersistentList<Tank>) {
     Showcase {
         Detail.Content(
             Detail.PreviewActions,
-            place = null,
+            tank = tanks.first(),
         )
     }
 }

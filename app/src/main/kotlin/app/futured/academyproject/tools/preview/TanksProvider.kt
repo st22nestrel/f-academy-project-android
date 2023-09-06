@@ -20,9 +20,9 @@ class TanksProvider : PreviewParameterProvider<PersistentList<Tank>> {
                 shortName = "T-34",
                 description = "The legend of the Soviet armored forces and the most widely-produced Soviet tank of World War II, with a total of 33,805 vehicles manufactured. Three variants of this model were produced at several Soviet factories from 1940 through 1944.",
 
-                smallIcon = "http://api.worldoftanks.eu/static/2.71.0/wot/encyclopedia/vehicle/small/ussr-R04_T-34.png",
-                contourIcon = "http://api.worldoftanks.eu/static/2.71.0/wot/encyclopedia/vehicle/contour/ussr-R04_T-34.png",
-                bigIcon = "http://api.worldoftanks.eu/static/2.71.0/wot/encyclopedia/vehicle/ussr-R04_T-34.png",
+                smallIcon = "https://api.worldoftanks.eu/static/2.71.0/wot/encyclopedia/vehicle/small/ussr-R04_T-34.png",
+                contourIcon = "https://api.worldoftanks.eu/static/2.71.0/wot/encyclopedia/vehicle/contour/ussr-R04_T-34.png",
+                bigIcon = "https://api.worldoftanks.eu/static/2.71.0/wot/encyclopedia/vehicle/ussr-R04_T-34.png",
             ),
             Tank(
                 id = 3137,
