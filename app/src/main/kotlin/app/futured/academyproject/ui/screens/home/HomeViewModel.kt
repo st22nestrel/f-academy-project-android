@@ -1,7 +1,8 @@
 package app.futured.academyproject.ui.screens.home
 
-import androidx.compose.runtime.mutableStateOf
+import app.futured.academyproject.domain.FilterTanksUseCase
 import app.futured.academyproject.domain.GetTanksFlowUseCase
+import app.futured.academyproject.domain.util.filters.Filters
 import app.futured.academyproject.tools.arch.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
@@ -12,6 +13,7 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     override val viewState: HomeViewState,
     private val getTanksFlowUseCase: GetTanksFlowUseCase,
+    private val filterTanksUseCase: FilterTanksUseCase,
 ) : BaseViewModel<HomeViewState>(), Home.Actions {
 
     init {
@@ -25,6 +27,7 @@ class HomeViewModel @Inject constructor(
             onNext {
                 Timber.d("Tanks: $it")
 
+                viewState.loadedTanks = it.toPersistentList()
                 viewState.tanks = it.toPersistentList()
             }
             onError { error ->
@@ -32,6 +35,10 @@ class HomeViewModel @Inject constructor(
                 viewState.error = error
             }
         }
+    }
+
+    public override fun filterTanks(filters: Filters) {
+        viewState.tanks = filterTanksUseCase.invoke(filters, viewState.loadedTanks)
     }
 
     override fun tryAgain() {

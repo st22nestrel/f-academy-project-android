@@ -55,6 +55,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Settings
+import app.futured.academyproject.domain.FilterTanksUseCase
+import app.futured.academyproject.domain.util.filters.Filters
 import app.futured.academyproject.ui.components.TankCard
 import kotlinx.collections.immutable.toPersistentList
 
@@ -62,14 +64,15 @@ import kotlinx.collections.immutable.toPersistentList
 fun HomeScreen(
     navigation: NavigationDestinations,
     viewModel: HomeViewModel = hiltViewModel(),
+    tankFilters: Filters = Filters()
 ) {
     with(viewModel) {
         EventsEffect {
             onEvent<NavigateToDetailEvent> {
                 navigation.navigateToDetailScreen(tankId = it.tankId)
             }
-            onEvent<TierSelectedEvent> {
-                viewModel.tryAgain()
+            onEvent<FilterSelectedEvent> {
+                viewModel.filterTanks(tankFilters)
             }
         }
 
@@ -77,6 +80,7 @@ fun HomeScreen(
             viewModel,
             viewState.tanks,
             viewState.error,
+            filters = tankFilters
         )
     }
 }
@@ -88,6 +92,8 @@ object Home {
         fun navigateToDetailScreen(placeId: Int) = Unit
 
         fun tryAgain() = Unit
+
+        fun filterTanks(filters: Filters) = Unit
     }
 
     object PreviewActions : Actions
@@ -98,11 +104,11 @@ object Home {
         actions: Actions,
         tanks: PersistentList<Tank>,
         error: Throwable?,
+        filters: Filters,
         modifier: Modifier = Modifier,
+
     ) {
         val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
-
-        val options = remember{ mutableStateOf(Filters) }
 
         Scaffold(
             modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -118,9 +124,7 @@ object Home {
                         Loading()
                     }
                     tanks.isNotEmpty() -> {
-                        //HomeDropDownMenu(innerPadding)
-                        //MainW4(innerPadding)
-                        HomeDropDownMenuFilters(innerPadding, options.value)
+                        HomeDropDownMenuFilters(innerPadding, filters, actions)
                         LazyColumn(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.spacedBy(Grid.d1),
@@ -128,7 +132,7 @@ object Home {
                                 .padding(top = 140.dp)
                                 .fillMaxSize(),
                         ) {
-                            items(FilterTanks(tanks, options.value)) { tank ->
+                            items(tanks) { tank ->
                                 TankCard(
                                     tank = tank,
                                     onClick = actions::navigateToDetailScreen,
@@ -141,29 +145,6 @@ object Home {
         )
     }
 
-    fun FilterTanks(tanks: PersistentList<Tank>, filters: Filters): PersistentList<Tank> {
-        val tanks2 = tanks.toPersistentList()
-        filters.presentFilters.forEach{
-            filter ->
-            filter.selectedValues.forEach{ option ->
-                tanks2.addAll(tanks.filter { Tank::tier.equals(option) })
-            }
-        }
-        return tanks2
-    }
-
-    object Filters{
-        class Filter(
-            val name: String,
-            val values: List<Int>,
-            val selectedValues: MutableList<Int> = mutableListOf()
-
-        )
-
-        //var selectedValue: Int = 8
-        var presentFilters = listOf(Filter("tier", listOf(1,2,3,4,5,6,7,8,9,10)))
-        //val options = listOf(Option("tier", listOf("1","2","3","4","5","6","7","8","9","10")))
-    }
 
     @Composable
     fun MainW4(innerPadding: PaddingValues) {
@@ -215,21 +196,21 @@ object Home {
     }
 
     @Composable
-    fun HomeDropDownMenuFilters(innerPadding: PaddingValues, filters: Filters) {
+    fun HomeDropDownMenuFilters(innerPadding: PaddingValues, filters: Filters, actions: Actions) {
         var expanded by remember { mutableStateOf(false) }
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .padding(innerPadding)
-        ) { filters.presentFilters.forEach { filter ->
+        ) { filters.iterator().forEach { filter ->
                 Button(
                     onClick = { expanded = true },
                     modifier = Modifier
                         .padding(vertical = Grid.d2, horizontal = Grid.d2),
                     ) {
                     Text(
-                        text = filter.name, style = MaterialTheme.typography.headlineSmall,
+                        text = filter.description, style = MaterialTheme.typography.headlineSmall,
                     )
                 }
                 DropdownMenu(
@@ -243,9 +224,11 @@ object Home {
                             text = { Text(e.toString()) },
                             onClick = {
                                 expanded = false
-                                if (filter.selectedValues.contains(e)) {
+                                if (!filter.selectedValues.contains(e)) {
                                     filter.selectedValues.add(e)
+                                    //filter.selectedValues = filter.selectedValues.sorted()
                                 }
+                                actions.filterTanks(filters)
                                       },
                             leadingIcon = {
                                 Icon(
@@ -258,47 +241,6 @@ object Home {
             }
         }
     }
-
-    @Composable
-    @OptIn(ExperimentalMaterial3Api::class)
-    private fun HomeDropDownMenu(innerPadding: PaddingValues){
-        val options = Filters
-        Row (
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .padding(innerPadding),
-
-            ) {
-                options.presentFilters.forEach { option ->
-                    val expanded = remember { mutableStateOf(false) }
-                    Column (
-                        verticalArrangement = Arrangement.Center,
-                        modifier = Modifier
-                            .padding(vertical = Grid.d2, horizontal = Grid.d2),
-                    ) {
-                        Box(modifier = Modifier.padding(vertical = 8.dp)) {
-                            Text(
-                                text = option.name, style = MaterialTheme.typography.headlineSmall,
-                                modifier = Modifier.clickable(onClick = { expanded.value = !expanded.value })
-                            )
-                            DropdownMenu(expanded = expanded.value, onDismissRequest = { expanded.value = false }) {
-                                option.values.forEach { e ->
-                                    DropdownMenuItem(
-                                        text = {e},
-                                        onClick = {
-                                            //TODO
-                                            //selectedCategory.value = e.toString()
-                                            expanded.value = false
-                                        },
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
-        }
-    }
-
 
 //    data class Grocery(val name: String, val category: String, val color: String)
 //
@@ -474,6 +416,7 @@ private fun HomeContentPreview(@PreviewParameter(TanksProvider::class) tanks: Pe
             Home.PreviewActions,
             tanks,
             error = null,
+            filters = Filters(),
         )
     }
 }
@@ -486,6 +429,7 @@ private fun HomeContentWithErrorPreview() {
             Home.PreviewActions,
             tanks = persistentListOf(),
             error = IllegalStateException("Test"),
+            filters = Filters(),
         )
     }
 }
@@ -498,6 +442,7 @@ private fun HomeContentWithLoadingPreview() {
             Home.PreviewActions,
             tanks = persistentListOf(),
             error = null,
+            filters = Filters(),
         )
     }
 }

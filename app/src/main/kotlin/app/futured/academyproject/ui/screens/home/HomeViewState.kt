@@ -17,6 +17,8 @@ class HomeViewState @Inject constructor() : ViewState {
     //var places: PersistentList<Place> by mutableStateOf(persistentListOf())
 
 
+    var loadedTanks: PersistentList<Tank> = persistentListOf()
+
     var tanks: PersistentList<Tank> by mutableStateOf(persistentListOf())
 
     var error: Throwable? by mutableStateOf(null)
