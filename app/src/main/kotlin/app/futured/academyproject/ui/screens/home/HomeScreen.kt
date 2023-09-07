@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
@@ -51,19 +50,13 @@ import app.futured.academyproject.ui.components.Showcase
 import app.futured.academyproject.ui.theme.Grid
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import app.futured.academyproject.ui.components.TankCard
+import kotlinx.collections.immutable.toPersistentList
 
 @Composable
 fun HomeScreen(
@@ -90,12 +83,6 @@ fun HomeScreen(
 
 object Home {
 
-    object State{
-        var expanded = false // state variable for menu expansion
-        val options = listOf("Option 1", "Option 2", "Option 3") // list of options for the menu
-        var selectedOption = mutableStateOf(options[0])
-    }
-
     interface Actions {
 
         fun navigateToDetailScreen(placeId: Int) = Unit
@@ -115,6 +102,8 @@ object Home {
     ) {
         val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
+        val options = remember{ mutableStateOf(Filters) }
+
         Scaffold(
             modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             topBar = {
@@ -131,38 +120,51 @@ object Home {
                     tanks.isNotEmpty() -> {
                         //HomeDropDownMenu(innerPadding)
                         //MainW4(innerPadding)
-                        MainW3(innerPadding)
-//                        LazyColumn(
-//                            horizontalAlignment = Alignment.CenterHorizontally,
-//                            contentPadding = innerPadding,
-//                            verticalArrangement = Arrangement.spacedBy(Grid.d1),
-//                            modifier = Modifier
-//                                .fillMaxSize(),
-//                        ) {
-//                            items(tanks) { tank ->
-//                                TankCard(
-//                                    tank = tank,
-//                                    onClick = actions::navigateToDetailScreen,
-//                                )
-//                            }
-//                        }
+                        HomeDropDownMenuFilters(innerPadding, options.value)
+                        LazyColumn(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(Grid.d1),
+                            modifier = Modifier
+                                .padding(top = 140.dp)
+                                .fillMaxSize(),
+                        ) {
+                            items(FilterTanks(tanks, options.value)) { tank ->
+                                TankCard(
+                                    tank = tank,
+                                    onClick = actions::navigateToDetailScreen,
+                                )
+                            }
+                        }
                     }
                 }
             },
         )
     }
 
-    object Options{
-        class Option(
-            val name: String,
-            val values: List<String>
-        )
-
-        //val options = listOf(Option("tier", listOf(1,2,3,4,5,6,7,8,9,10)))
-        val options = listOf(Option("tier", listOf("1","2","3","4","5","6","7","8","9","10")))
+    fun FilterTanks(tanks: PersistentList<Tank>, filters: Filters): PersistentList<Tank> {
+        val tanks2 = tanks.toPersistentList()
+        filters.presentFilters.forEach{
+            filter ->
+            filter.selectedValues.forEach{ option ->
+                tanks2.addAll(tanks.filter { Tank::tier.equals(option) })
+            }
+        }
+        return tanks2
     }
 
-    val options = Options
+    object Filters{
+        class Filter(
+            val name: String,
+            val values: List<Int>,
+            val selectedValues: MutableList<Int> = mutableListOf()
+
+        )
+
+        //var selectedValue: Int = 8
+        var presentFilters = listOf(Filter("tier", listOf(1,2,3,4,5,6,7,8,9,10)))
+        //val options = listOf(Option("tier", listOf("1","2","3","4","5","6","7","8","9","10")))
+    }
+
     @Composable
     fun MainW4(innerPadding: PaddingValues) {
         var expanded by remember { mutableStateOf(false) }
@@ -213,25 +215,38 @@ object Home {
     }
 
     @Composable
-    fun MainW3(innerPadding: PaddingValues) {
+    fun HomeDropDownMenuFilters(innerPadding: PaddingValues, filters: Filters) {
         var expanded by remember { mutableStateOf(false) }
 
-        Box(
-            contentAlignment = Alignment.Center,
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .padding(innerPadding)
-        ) { options.options.forEach { option ->
-                IconButton(onClick = { expanded = true }) {
-                    Icon(Icons.Default.MoreVert, contentDescription = option.name)
+        ) { filters.presentFilters.forEach { filter ->
+                Button(
+                    onClick = { expanded = true },
+                    modifier = Modifier
+                        .padding(vertical = Grid.d2, horizontal = Grid.d2),
+                    ) {
+                    Text(
+                        text = filter.name, style = MaterialTheme.typography.headlineSmall,
+                    )
                 }
                 DropdownMenu(
                     expanded = expanded,
-                    onDismissRequest = { expanded = false }
+                    onDismissRequest = { expanded = false },
+                    modifier = Modifier
+                        .padding(vertical = Grid.d2, horizontal = Grid.d2),
                 ) {
-                    option.values.forEach { option ->
+                    filter.values.forEach { e ->
                         DropdownMenuItem(
-                            text = { Text(option) },
-                            onClick = { expanded = false },
+                            text = { Text(e.toString()) },
+                            onClick = {
+                                expanded = false
+                                if (filter.selectedValues.contains(e)) {
+                                    filter.selectedValues.add(e)
+                                }
+                                      },
                             leadingIcon = {
                                 Icon(
                                     Icons.Outlined.Edit,
@@ -247,14 +262,14 @@ object Home {
     @Composable
     @OptIn(ExperimentalMaterial3Api::class)
     private fun HomeDropDownMenu(innerPadding: PaddingValues){
-        val options = Options
+        val options = Filters
         Row (
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .padding(innerPadding),
 
             ) {
-                options.options.forEach { option ->
+                options.presentFilters.forEach { option ->
                     val expanded = remember { mutableStateOf(false) }
                     Column (
                         verticalArrangement = Arrangement.Center,
@@ -382,7 +397,7 @@ object Home {
             ),
             scrollBehavior = scrollBehavior,
             actions = {
-                IconButton(onClick = { State.expanded = !State.expanded }) { // toggle button for the menu
+                /*IconButton(onClick = { State.expanded = !State.expanded }) { // toggle button for the menu
                     Icon(Icons.Filled.MoreVert, "More") // icon for the menu
                 }
                 DropdownMenu( // menu component
@@ -398,7 +413,7 @@ object Home {
                             },
                         )
                     }
-                }
+                }*/
             }
         )
     }

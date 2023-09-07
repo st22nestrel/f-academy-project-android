@@ -6,4 +6,6 @@ sealed class HomeEvents : Event<HomeViewState>()
 
 data class NavigateToDetailEvent(val tankId: Int) : HomeEvents()
 
+data class NavigateToDetailEvent(val tankId: Int) : HomeEvents()
+
 data class TierSelectedEvent(val tier: Int) : HomeEvents()
