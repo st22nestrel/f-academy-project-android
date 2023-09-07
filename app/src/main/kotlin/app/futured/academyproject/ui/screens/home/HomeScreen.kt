@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
@@ -26,8 +27,10 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -48,6 +51,19 @@ import app.futured.academyproject.ui.components.Showcase
 import app.futured.academyproject.ui.theme.Grid
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.Email
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 
 @Composable
 fun HomeScreen(
@@ -113,7 +129,9 @@ object Home {
                         Loading()
                     }
                     tanks.isNotEmpty() -> {
-                        HomeDropDownMenu(innerPadding, Options)
+                        //HomeDropDownMenu(innerPadding)
+                        //MainW4(innerPadding)
+                        MainW3(innerPadding)
 //                        LazyColumn(
 //                            horizontalAlignment = Alignment.CenterHorizontally,
 //                            contentPadding = innerPadding,
@@ -144,9 +162,92 @@ object Home {
         val options = listOf(Option("tier", listOf("1","2","3","4","5","6","7","8","9","10")))
     }
 
+    val options = Options
+    @Composable
+    fun MainW4(innerPadding: PaddingValues) {
+        var expanded by remember { mutableStateOf(false) }
+
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .padding(innerPadding)
+        ) {
+            IconButton(onClick = { expanded = true }) {
+                Icon(Icons.Default.MoreVert, contentDescription = "Localized description")
+            }
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                DropdownMenuItem(
+                    text = { Text("Edit") },
+                    onClick = { /* Handle edit! */ },
+                    leadingIcon = {
+                        Icon(
+                            Icons.Outlined.Edit,
+                            contentDescription = null
+                        )
+                    })
+                DropdownMenuItem(
+                    text = { Text("Settings") },
+                    onClick = { /* Handle settings! */ },
+                    leadingIcon = {
+                        Icon(
+                            Icons.Outlined.Settings,
+                            contentDescription = null
+                        )
+                    })
+                //HorizontalDivider()
+                DropdownMenuItem(
+                    text = { Text("Send Feedback") },
+                    onClick = { /* Handle send feedback! */ },
+                    leadingIcon = {
+                        Icon(
+                            Icons.Outlined.Email,
+                            contentDescription = null
+                        )
+                    },
+                    trailingIcon = { Text("F11", textAlign = TextAlign.Center) })
+            }
+        }
+    }
+
+    @Composable
+    fun MainW3(innerPadding: PaddingValues) {
+        var expanded by remember { mutableStateOf(false) }
+
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .padding(innerPadding)
+        ) { options.options.forEach { option ->
+                IconButton(onClick = { expanded = true }) {
+                    Icon(Icons.Default.MoreVert, contentDescription = option.name)
+                }
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    option.values.forEach { option ->
+                        DropdownMenuItem(
+                            text = { Text(option) },
+                            onClick = { expanded = false },
+                            leadingIcon = {
+                                Icon(
+                                    Icons.Outlined.Edit,
+                                    contentDescription = null
+                                )
+                            })
+                    }
+                }
+            }
+        }
+    }
+
     @Composable
     @OptIn(ExperimentalMaterial3Api::class)
-    private fun HomeDropDownMenu(innerPadding: PaddingValues, options: Options){
+    private fun HomeDropDownMenu(innerPadding: PaddingValues){
+        val options = Options
         Row (
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
@@ -168,7 +269,7 @@ object Home {
                             DropdownMenu(expanded = expanded.value, onDismissRequest = { expanded.value = false }) {
                                 option.values.forEach { e ->
                                     DropdownMenuItem(
-                                        text = {"fuck this"},
+                                        text = {e},
                                         onClick = {
                                             //TODO
                                             //selectedCategory.value = e.toString()
