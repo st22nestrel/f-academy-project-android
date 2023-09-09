@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -32,11 +31,10 @@ import app.futured.academyproject.data.model.local.TankComparable
 import app.futured.academyproject.navigation.NavigationDestinations
 import app.futured.academyproject.tools.arch.EventsEffect
 import app.futured.academyproject.tools.arch.onEvent
-import app.futured.academyproject.ui.components.TankCard
 import app.futured.academyproject.ui.components.TankCardVertical
-import app.futured.academyproject.ui.screens.home.Home
 import app.futured.academyproject.ui.theme.Grid
 import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.PersistentMap
 
 @Composable
 fun CompareTableScreeen(
@@ -51,6 +49,7 @@ fun CompareTableScreeen(
         }
         CompareTable.Content(
             viewModel,
+            viewState.tanks,
             viewState.tanksComparable
         )
     }
@@ -70,8 +69,8 @@ object CompareTable {
     fun Content(
         actions: Actions,
         //tanks: PersistentList<Pair<Tank,TankComparable>>,
-        //tanks: PersistentList<Tank>,
-        tanks: PersistentList<TankComparable>,
+        tanks: PersistentList<Tank>,
+        tanksComparable: PersistentMap<Int, TankComparable>,
         //tanksComparable: PersistentList<TankComparable>,
         modifier: Modifier = Modifier,
     ){
@@ -84,7 +83,7 @@ object CompareTable {
             },
             content = {innerPadding ->
                 when {
-                    tanks.isEmpty() -> {
+                    tanks.isEmpty() or tanksComparable.isEmpty() -> {
                         Loading()
                     }
                     tanks.isNotEmpty() -> {
@@ -96,12 +95,13 @@ object CompareTable {
                                 .fillMaxSize(),
                         ) {
                             items(tanks) { tank ->
-                                TankCardVertical(
-                                    //tank = tank,
-                                    //tank = tank.first,
-                                    tankStatistics = tank,
-                                    onIconClicked = actions::onTankIconClick
-                                )
+                                tanksComparable[tank.id]?.let {
+                                    TankCardVertical(
+                                        tank = tank,
+                                        tankStatistics = it,
+                                        onIconClicked = actions::onTankIconClick
+                                    )
+                                }
                             }
                         }
                     }

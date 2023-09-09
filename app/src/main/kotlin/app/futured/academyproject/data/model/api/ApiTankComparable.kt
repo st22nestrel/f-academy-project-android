@@ -42,7 +42,7 @@ data class ApiTankComparable (
 
     @Serializable
     data class Armor (
-        @SerialName("turret") val turret: Turret,
+        @SerialName("turret") val turret: Turret?,
         @SerialName("hull") val hull: Hull
     ) {
         @Serializable
@@ -83,9 +83,9 @@ fun ApiTankComparable.mapToTankComparable() = TankComparable(
     engineFireChance = engine.fireChance,
     maxAmmo = maxAmmo,
     armor = TankComparable.Armor(
-        turretFront = armor.turret.front,
-        turretSides = armor.turret.sides,
-        turretRear = armor.turret.rear,
+        turretFront = armor.turret?.front ?: -1,
+        turretSides = armor.turret?.sides ?: -1,
+        turretRear = armor.turret?.rear ?: -1,
         hullFront = armor.hull.front,
         hullSides = armor.hull.sides,
         hullRear = armor.hull.rear
