@@ -16,18 +16,23 @@ class GetTanksFlowUseCase @Inject constructor (
     private val tanksStore: TanksStore,
 ) : FlowUseCase<Unit, List<Tank>>() {
     override fun build(args: Unit): Flow<List<Tank>> = combine(
-        tanksPersistence.observeTankIds(),
-        //tanksStore.getTanksFlow()
-        flowOf(TanksProvider().values.first())
-    ) { favouriteTankIds, apiTanks ->
+        tanksPersistence.observeTankIdsFavorite(),
+        tanksPersistence.observeTankIdsSelected(),
+        tanksStore.getTanksFlow()
+        //flowOf(TanksProvider().values.first())
+    ) { favouriteTankIds, selectedTankIds, apiTanks  ->
 
-        apiTanks
-//        apiTanks.data.map {
-//            val isFavoriteTank = it.value.id in favouriteTankIds
-//            it.value.mapToTank(isFavoriteTank)
+//        apiTanks.forEach {
+//            it.isSelected = it.id in selectedTankIds
+//            it.isFavourite = it.id in favouriteTankIds
 //        }
-        .sortedWith( compareByDescending(Tank::tier).thenBy(Tank::nation).thenBy(Tank::tankType) )
-        //sortedWith( compareByDescending(Tank::tier).thenBy(Tank::tankType).thenBy(Tank::nation) )
+        apiTanks.data.map {
+            val isFavourite = it.value.id in favouriteTankIds
+            val isSelected = it.value.id in selectedTankIds
+            it.value.mapToTank(isFavourite, isSelected)
+        }.
+        //apiTanks.sortedWith( compareByDescending(Tank::tier).thenBy(Tank::nation).thenBy(Tank::tankType) )
+        sortedWith( compareByDescending(Tank::tier).thenBy(Tank::tankType).thenBy(Tank::nation) )
         //sortedWith( compareBy(Tank::tier, Tank::nation, Tank::tankType))
     }
 }

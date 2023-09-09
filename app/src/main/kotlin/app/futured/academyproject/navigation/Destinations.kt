@@ -21,6 +21,7 @@ sealed class Destination(
     val deepLinks: List<NavDeepLink> = emptyList(),
 ) {
     object Home : Destination(route = "home")
+    object CompareTable : Destination(route = "compareTable")
     object Detail : Destination(
         route = "detail/{$TANK_ID}",
         arguments = listOf(

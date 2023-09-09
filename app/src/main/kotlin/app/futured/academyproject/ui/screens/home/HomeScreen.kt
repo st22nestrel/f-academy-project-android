@@ -1,6 +1,5 @@
 package app.futured.academyproject.ui.screens.home
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -55,10 +54,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Settings
-import app.futured.academyproject.domain.FilterTanksUseCase
 import app.futured.academyproject.domain.util.filters.Filters
 import app.futured.academyproject.ui.components.TankCard
-import kotlinx.collections.immutable.toPersistentList
 
 @Composable
 fun HomeScreen(
@@ -70,6 +67,9 @@ fun HomeScreen(
         EventsEffect {
             onEvent<NavigateToDetailEvent> {
                 navigation.navigateToDetailScreen(tankId = it.tankId)
+            }
+            onEvent<NavigateToCompareTableEvent> {
+                navigation.navigateToCompareTableScreen()
             }
             onEvent<FilterSelectedEvent> {
                 viewModel.filterTanks(tankFilters)
@@ -89,11 +89,14 @@ object Home {
 
     interface Actions {
 
-        fun navigateToDetailScreen(placeId: Int) = Unit
+        fun navigateToDetailScreen(tankId: Int) = Unit
+        fun navigateToCompareTableScreen() = Unit
 
         fun tryAgain() = Unit
 
         fun filterTanks(filters: Filters) = Unit
+
+        fun onSelected(tankId: Int) = Unit
     }
 
     object PreviewActions : Actions
@@ -115,6 +118,9 @@ object Home {
             topBar = {
                 HomeTopAppBar(scrollBehavior)
             },
+            bottomBar = {
+
+            },
             content = { innerPadding ->
                 when {
                     error != null -> {
@@ -125,17 +131,27 @@ object Home {
                     }
                     tanks.isNotEmpty() -> {
                         HomeDropDownMenuFilters(innerPadding, filters, actions)
+                        Button(
+                            onClick = { actions.navigateToCompareTableScreen() },
+                            modifier = Modifier.padding(innerPadding).padding(start = 120.dp)
+                            ) {
+                            Text(
+                                text = "Compare", style = MaterialTheme.typography.headlineSmall,
+                            )
+                        }
                         LazyColumn(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.spacedBy(Grid.d1),
                             modifier = Modifier
-                                .padding(top = 140.dp)
+                                .padding(innerPadding)
+                                .padding(top = 80.dp)
                                 .fillMaxSize(),
                         ) {
                             items(tanks) { tank ->
                                 TankCard(
                                     tank = tank,
                                     onClick = actions::navigateToDetailScreen,
+                                    onSelected = actions::onSelected
                                 )
                             }
                         }
@@ -143,56 +159,6 @@ object Home {
                 }
             },
         )
-    }
-
-
-    @Composable
-    fun MainW4(innerPadding: PaddingValues) {
-        var expanded by remember { mutableStateOf(false) }
-
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .padding(innerPadding)
-        ) {
-            IconButton(onClick = { expanded = true }) {
-                Icon(Icons.Default.MoreVert, contentDescription = "Localized description")
-            }
-            DropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
-            ) {
-                DropdownMenuItem(
-                    text = { Text("Edit") },
-                    onClick = { /* Handle edit! */ },
-                    leadingIcon = {
-                        Icon(
-                            Icons.Outlined.Edit,
-                            contentDescription = null
-                        )
-                    })
-                DropdownMenuItem(
-                    text = { Text("Settings") },
-                    onClick = { /* Handle settings! */ },
-                    leadingIcon = {
-                        Icon(
-                            Icons.Outlined.Settings,
-                            contentDescription = null
-                        )
-                    })
-                //HorizontalDivider()
-                DropdownMenuItem(
-                    text = { Text("Send Feedback") },
-                    onClick = { /* Handle send feedback! */ },
-                    leadingIcon = {
-                        Icon(
-                            Icons.Outlined.Email,
-                            contentDescription = null
-                        )
-                    },
-                    trailingIcon = { Text("F11", textAlign = TextAlign.Center) })
-            }
-        }
     }
 
     @Composable
@@ -241,77 +207,6 @@ object Home {
             }
         }
     }
-
-//    data class Grocery(val name: String, val category: String, val color: String)
-//
-//    val groceries = listOf(
-//        Grocery("Apple", "Fruit", "Red"),
-//        Grocery("Banana", "Fruit", "Yellow"),
-//        Grocery("Broccoli", "Vegetable", "Green"),
-//        Grocery("Carrot", "Vegetable", "Orange")
-//    )
-//    @Composable
-//    @OptIn(ExperimentalMaterial3Api::class)
-//    private fun HomeDropDownMenu(innerPadding: PaddingValues){
-//        val selectedCategory = remember { mutableStateOf<String?>(null) }
-//        val selectedColor = remember { mutableStateOf<String?>(null) }
-//        val expandedCategory = remember { mutableStateOf(false) }
-//        val expandedColor = remember { mutableStateOf(false) }
-//
-//        Row (
-//            verticalAlignment = Alignment.CenterVertically,
-//            modifier = Modifier
-//             .padding(innerPadding),
-//
-//        ) {
-//            Column (
-//                verticalArrangement = Arrangement.Center,
-//                modifier = Modifier
-//                    .padding(vertical = Grid.d2, horizontal = Grid.d2),
-//            ) {
-//                Text("Category", style = MaterialTheme.typography.headlineSmall)
-//                Box(modifier = Modifier.padding(vertical = 8.dp)) {
-//                    Text(
-//                        text = selectedCategory.value ?: "Select a category",
-//                        modifier = Modifier.clickable(onClick = { expandedCategory.value = !expandedCategory.value })
-//                    )
-//                    DropdownMenu(expanded = expandedCategory.value, onDismissRequest = { expandedCategory.value = false }) {
-//                        groceries.map { it.category }.distinct().forEach { category ->
-//                            DropdownMenuItem(
-//                                text = {category},
-//                                onClick = {
-//                                    selectedCategory.value = category
-//                                    expandedCategory.value = false
-//                                },
-//                            )
-//                        }
-//                    }
-//                }
-//            }
-//
-//            Column (
-//                verticalArrangement = Arrangement.Center,
-//            ) {
-//                Text("Color", style = MaterialTheme.typography.headlineSmall)
-//                Box(modifier = Modifier.padding(vertical = 8.dp)) {
-//                    Text(
-//                        text = selectedColor.value ?: "Select a color",
-//                        modifier = Modifier.clickable(onClick = { expandedColor.value = !expandedColor.value })
-//                    )
-//                    DropdownMenu(expanded = expandedColor.value, onDismissRequest = { expandedColor.value = false }) {
-//                        groceries.map { it.color }.distinct().forEach { color ->
-//                            DropdownMenuItem(
-//                                text = {color},
-//                                onClick = {
-//                                    selectedColor.value = color
-//                                    expandedColor.value = false
-//                                })
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
 
 
     @Composable

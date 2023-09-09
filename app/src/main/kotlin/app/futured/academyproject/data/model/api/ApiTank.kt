@@ -26,9 +26,11 @@ data class ApiTank(
     )
 }
 
-fun ApiTank.mapToTank(isFavourite: Boolean) = Tank(
+fun ApiTank.mapToTank(isFavourite: Boolean,
+                      isSelected: Boolean = false) = Tank(
     id = id,
     isFavourite = isFavourite,
+    isSelected = isSelected,
     isPremium = premium,
     tankType = tankType,
     tier = tier,

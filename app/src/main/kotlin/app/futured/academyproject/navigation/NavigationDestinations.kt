@@ -5,6 +5,7 @@ import androidx.navigation.NavController
 interface NavigationDestinations {
     fun popBackStack()
     fun navigateToDetailScreen(tankId: Int)
+    fun navigateToCompareTableScreen()
 }
 
 /**
@@ -17,4 +18,9 @@ class NavigationDestinationsImpl(private val navController: NavController) : Nav
     }
 
     override fun navigateToDetailScreen(tankId: Int) =
-        navController.navigate(Destination.Detail.buildRoute(tankId))}
+        navController.navigate(Destination.Detail.buildRoute(tankId))
+
+    override fun navigateToCompareTableScreen() {
+        navController.navigate(Destination.CompareTable.route)
+    }
+}

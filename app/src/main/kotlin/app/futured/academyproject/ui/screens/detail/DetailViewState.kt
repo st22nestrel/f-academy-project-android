@@ -15,7 +15,7 @@ class DetailViewState @Inject constructor(
     savedStateHandle: SavedStateHandle,
 ) : ViewState {
 
-    val tankId = savedStateHandle.get<Int>(TANK_ID) ?: throw IllegalArgumentException("Missing placeId argument")
+    val tankId = savedStateHandle.get<Int>(TANK_ID) ?: throw IllegalArgumentException("Missing tankId argument")
 
     var tank by mutableStateOf<Tank?>(null)
 }

@@ -2,6 +2,7 @@
 
 package app.futured.academyproject.data.remote
 
+import app.futured.academyproject.data.model.api.ApiTanksComparable
 import app.futured.academyproject.data.model.api.ApiTanks
 import app.futured.academyproject.data.model.api.CulturalPlaces
 import javax.inject.Inject
@@ -19,6 +20,12 @@ class ApiManager @Inject constructor(
 
     suspend fun getApiTanks(): ApiTanks = try {
         apiService.apiTanks()
+    } catch (e: Exception) {
+        throw ApiExceptionUnknown(e.localizedMessage, e)
+    }
+
+    suspend fun getApiComparableTank(tankId: Int): ApiTanksComparable = try {
+        apiService.apiComparableTank(tankId)
     } catch (e: Exception) {
         throw ApiExceptionUnknown(e.localizedMessage, e)
     }

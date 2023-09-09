@@ -9,6 +9,7 @@ import app.futured.academyproject.navigation.Destination
 import app.futured.academyproject.navigation.NavigationDestinations
 import app.futured.academyproject.navigation.NavigationDestinationsImpl
 import app.futured.academyproject.navigation.composable
+import app.futured.academyproject.ui.screens.compareTable.CompareTableScreeen
 import app.futured.academyproject.ui.screens.detail.DetailScreen
 import app.futured.academyproject.ui.screens.home.HomeScreen
 
@@ -27,6 +28,10 @@ fun NavGraph(
 
         composable(Destination.Detail) {
             DetailScreen(navigation)
+        }
+
+        composable(Destination.CompareTable) {
+            CompareTableScreeen(navigation)
         }
     }
 }

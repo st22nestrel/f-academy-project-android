@@ -3,7 +3,6 @@ package app.futured.academyproject.data.persistence
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -12,32 +11,55 @@ class TanksPersistence @Inject constructor(
     private val persistence: Persistence,
 ) {
     companion object {
-        private const val TANK_IDS_KEY = "TANK_IDS_KEY"
+        private const val TANK_IDS_FAVORITE_KEY = "TANK_IDS_FAVORITE_KEY"
+        private const val TANK_IDS_SELECTED_KEY = "TANK_IDS_SELECTED_KEY"
     }
-    // TODO Step 3 - uncomment code
-    private val tankIdsFlow: MutableStateFlow<List<Int>> = MutableStateFlow(
-        persistence.getOrNull(TANK_IDS_KEY) ?: emptyList()
+
+    private val tankIdsFavoriteFlow: MutableStateFlow<List<Int>> = MutableStateFlow(
+        persistence.getOrNull(TANK_IDS_FAVORITE_KEY) ?: emptyList()
     )
 
-    // TODO Step 4 - replace "flow { emit(emptyList()) }" with "placeIdsFlow.asStateFlow()"
-    fun observeTankIds(): Flow<List<Int>> = tankIdsFlow.asStateFlow()
+    fun observeTankIdsFavorite(): Flow<List<Int>> = tankIdsFavoriteFlow.asStateFlow()
 
-    fun getTankIds(): List<Int> = persistence.getOrNull(TANK_IDS_KEY) ?: emptyList()
+    fun getTankIdsFavorite(): List<Int> = persistence.getOrNull(TANK_IDS_FAVORITE_KEY) ?: emptyList()
 
-    fun setTankIds(tankIds: List<Int>) {
-        persistence[TANK_IDS_KEY] = tankIds
-        tankIdsFlow.value = tankIds
+    fun setTankIdsFavorite(tankIds: List<Int>) {
+        persistence[TANK_IDS_FAVORITE_KEY] = tankIds
+        tankIdsFavoriteFlow.value = tankIds
     }
 
-    // TODO Step 5 - create method/s to check if the place ID is already stored, if so, remove it, if not, add place id into list and save it
-    fun addTankId(placeId: Int) {
-        var tankIds = getTankIds().toMutableList()
-        if (tankIds.contains(placeId)) {
-            tankIds.remove(placeId)
+    fun addTankIdFavorite(tankId: Int) {
+        var tankIds = getTankIdsFavorite().toMutableList()
+        if (tankIds.contains(tankId)) {
+            tankIds.remove(tankId)
         }
         else {
-            tankIds.add((placeId))
+            tankIds.add((tankId))
         }
-        setTankIds(tankIds)
+        setTankIdsFavorite(tankIds)
+    }
+
+    private val tankIdsSelectedFlow: MutableStateFlow<List<Int>> = MutableStateFlow(
+        persistence.getOrNull(TANK_IDS_SELECTED_KEY) ?: emptyList()
+    )
+
+    fun observeTankIdsSelected(): Flow<List<Int>> = tankIdsSelectedFlow.asStateFlow()
+
+    fun getTankIdsSelected(): List<Int> = persistence.getOrNull(TANK_IDS_SELECTED_KEY) ?: emptyList()
+
+    fun setTankIdsSelected(tankIds: List<Int>) {
+        persistence[TANK_IDS_SELECTED_KEY] = tankIds
+        tankIdsSelectedFlow.value = tankIds
+    }
+
+    fun addTankIdSelected(tankId: Int) {
+        var tankIds = getTankIdsSelected().toMutableList()
+        if (tankIds.contains(tankId)) {
+            tankIds.remove(tankId)
+        }
+        else {
+            tankIds.add((tankId))
+        }
+        setTankIdsSelected(tankIds)
     }
 }

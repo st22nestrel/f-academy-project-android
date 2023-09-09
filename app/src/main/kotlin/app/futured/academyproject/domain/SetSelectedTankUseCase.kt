@@ -11,12 +11,12 @@ import app.futured.academyproject.data.persistence.TanksPersistence
 import app.futured.arkitekt.crusecases.UseCase
 import javax.inject.Inject
 
-class SetFavoriteTankUseCase @Inject constructor(
+class SetSelectedTankUseCase @Inject constructor(
     private val persistence: TanksPersistence,
-): UseCase<SetFavoriteTankUseCase.Args, Unit>() {
+): UseCase<SetSelectedTankUseCase.Args, Unit>() {
 
     override suspend fun build(args: Args) {
-        persistence.addTankIdFavorite(args.tankId)
+        persistence.addTankIdSelected(args.tankId)
     }
 
     data class Args(val tankId: Int)

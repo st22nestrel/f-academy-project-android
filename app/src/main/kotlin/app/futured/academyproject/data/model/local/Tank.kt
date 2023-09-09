@@ -2,7 +2,8 @@ package app.futured.academyproject.data.model.local
 
 data class Tank(
     val id: Int,
-    val isFavourite: Boolean = false,
+    var isFavourite: Boolean = false,
+    var isSelected: Boolean = false,
     val isPremium: Boolean,
     val tankType: String,
     val tier: Int,
