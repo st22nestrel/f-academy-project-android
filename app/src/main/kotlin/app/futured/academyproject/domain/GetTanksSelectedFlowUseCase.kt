@@ -6,49 +6,29 @@ import app.futured.academyproject.data.model.local.Tank
 import app.futured.academyproject.data.model.local.TankComparable
 import app.futured.academyproject.data.persistence.TanksPersistence
 import app.futured.academyproject.data.store.TanksComparableStore
-import app.futured.academyproject.data.store.TanksStore
-import app.futured.academyproject.tools.preview.TanksProvider
 import app.futured.arkitekt.crusecases.FlowUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.zip
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.toList
 import javax.inject.Inject
 
 class GetTanksSelectedFlowUseCase @Inject constructor (
     private val tanksPersistence: TanksPersistence,
     private val tanksComparableStore: TanksComparableStore,
-) : FlowUseCase<Unit, List<Tank>>() {
-    override fun build(args: Unit): Flow<List<Tank>> = combine(
+) : FlowUseCase<Unit, List<TankComparable>>() {
+    override fun build(args: Unit): Flow<List<TankComparable>> = combine(
         tanksPersistence.observeTankIdsSelected(),
-        tanksComparableStore.getTanksFlow(tanksPersistence.observeTankIdsSelected()),
+        tanksComparableStore.getTanksComparableFlow(tanksPersistence.getTankIdsSelected()),
         //tanksComparableStore.getTanksComparableFlow()
         //flowOf(TanksProvider().values.first())
-    ) { selectedTankIds, apiTanks ->
+    ) { _, apiTanksComparable ->
+        //val tanksComparable: MutableList = mutableListOf()
 
-
-//        apiTanks
-//            .forEach{
-//            it.isSelected = it.id in selectedTankIds
-//        }
-        val tanksComparableList: MutableList<TankComparable> = mutableListOf()
-        val tanksList = apiTanks.data.filter {
-            it.value.id in selectedTankIds
+        apiTanksComparable.map{
+            it.data.values.first().mapToTankComparable()
         }
-        .map {
-            val isFavoriteTank = it.value.id in selectedTankIds
-            it.value.mapToTank(isFavoriteTank)
-        }
-        .sortedWith( compareByDescending(Tank::tier).thenBy(Tank::nation).thenBy(Tank::tankType) )
-
-//        tanksList.forEach{
-//            val tank = tanksComparableStore.getTank(it.id)
-//            tanksComparableList.add(tank!!.mapToTankComparable())
-//        }
-
-
-        //return@combine (tanksList zip tanksComparableList)
-        return@combine tanksList
     }
 }

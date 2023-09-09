@@ -15,4 +15,5 @@ import javax.inject.Inject
 class CompareTableViewState @Inject constructor() : ViewState{
     //var tanks: PersistentList<Pair<Tank, TankComparable>> by mutableStateOf(persistentListOf())
     var tanks: PersistentList<Tank> by mutableStateOf(persistentListOf())
+    var tanksComparable: PersistentList<TankComparable> by mutableStateOf(persistentListOf())
 }

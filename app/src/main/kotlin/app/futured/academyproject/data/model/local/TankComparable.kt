@@ -1,6 +1,7 @@
 package app.futured.academyproject.data.model.local
 
 data class TankComparable(
+    val id: Int,
     val engineName: String,
     val enginePower: Int,
     val engineWeight: Int,

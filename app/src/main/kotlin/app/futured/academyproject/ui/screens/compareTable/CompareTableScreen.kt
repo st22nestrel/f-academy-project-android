@@ -51,7 +51,7 @@ fun CompareTableScreeen(
         }
         CompareTable.Content(
             viewModel,
-            viewState.tanks
+            viewState.tanksComparable
         )
     }
 }
@@ -70,7 +70,9 @@ object CompareTable {
     fun Content(
         actions: Actions,
         //tanks: PersistentList<Pair<Tank,TankComparable>>,
-        tanks: PersistentList<Tank>,
+        //tanks: PersistentList<Tank>,
+        tanks: PersistentList<TankComparable>,
+        //tanksComparable: PersistentList<TankComparable>,
         modifier: Modifier = Modifier,
     ){
         val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -95,9 +97,9 @@ object CompareTable {
                         ) {
                             items(tanks) { tank ->
                                 TankCardVertical(
-                                    tank = tank,
+                                    //tank = tank,
                                     //tank = tank.first,
-                                    //tankStatistics = null,
+                                    tankStatistics = tank,
                                     onIconClicked = actions::onTankIconClick
                                 )
                             }

@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ApiTankComparable (
+    @SerialName("tank_id") val id: Int,
     @SerialName("engine") val engine: Engine,
     @SerialName("max_ammo") val maxAmmo: Int,
     @SerialName("suspension") val suspension: Suspension,
@@ -75,6 +76,7 @@ data class ApiTankComparable (
 }
 
 fun ApiTankComparable.mapToTankComparable() = TankComparable(
+    id = id,
     engineName = engine.name,
     enginePower = engine.power,
     engineWeight = engine.weight,

@@ -41,7 +41,7 @@ import kotlinx.collections.immutable.PersistentList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TankCardVertical(tank: Tank, /*tankStatistics: TankComparable,*/ modifier: Modifier = Modifier,
+fun TankCardVertical(/*tank: Tank,*/ tankStatistics: TankComparable, modifier: Modifier = Modifier,
              onIconClicked: (tankId: Int) -> Unit = ::onIconClickedPreview ) {
     //TODO convert to lazyColumn maybe?
     Column(
@@ -49,25 +49,25 @@ fun TankCardVertical(tank: Tank, /*tankStatistics: TankComparable,*/ modifier: M
             .padding(vertical = Grid.d2, horizontal = Grid.d4)
             .fillMaxWidth(),
     ) {
-        Card(
-            colors = CardDefaults.cardColors(),
-            modifier = Modifier
-                .size(Grid.d15),
-        ) {
-            Image(
-                painter = rememberAsyncImagePainter(
-                    ImageRequest.Builder(LocalContext.current)
-                        .data(tank.bigIcon.replace("http", "https"))
-                        .build(),
-                ),
-                contentDescription = tank.bigIcon,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .aspectRatio(1f)
-                    .clickable { onIconClicked(tank.id) },
-
-            )
-        }
+//        Card(
+//            colors = CardDefaults.cardColors(),
+//            modifier = Modifier
+//                .size(Grid.d15),
+//        ) {
+//            Image(
+//                painter = rememberAsyncImagePainter(
+//                    ImageRequest.Builder(LocalContext.current)
+//                        .data(tank.bigIcon.replace("http", "https"))
+//                        .build(),
+//                ),
+//                contentDescription = tank.bigIcon,
+//                contentScale = ContentScale.Crop,
+//                modifier = Modifier
+//                    .aspectRatio(1f)
+//                    .clickable { onIconClicked(tank.id) },
+//
+//            )
+//        }
 
         Text(
             text = "Basic tank info",
@@ -76,35 +76,35 @@ fun TankCardVertical(tank: Tank, /*tankStatistics: TankComparable,*/ modifier: M
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
-        Spacer(modifier = Modifier.height(Grid.d1))
-        Text(
-            text = tank.name,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurface,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-        )
-        Text(
-            text = tank.tankType,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-        )
-        Text(
-            text = tank.tier.toString(),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurface,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-        )
-        Text(
-            text = tank.nation,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-        )
+//        Spacer(modifier = Modifier.height(Grid.d1))
+//        Text(
+//            text = tank.name,
+//            style = MaterialTheme.typography.bodyMedium,
+//            color = MaterialTheme.colorScheme.onSurface,
+//            maxLines = 1,
+//            overflow = TextOverflow.Ellipsis,
+//        )
+//        Text(
+//            text = tank.tankType,
+//            style = MaterialTheme.typography.bodyMedium,
+//            color = MaterialTheme.colorScheme.onSurfaceVariant,
+//            maxLines = 1,
+//            overflow = TextOverflow.Ellipsis,
+//        )
+//        Text(
+//            text = tank.tier.toString(),
+//            style = MaterialTheme.typography.bodyMedium,
+//            color = MaterialTheme.colorScheme.onSurface,
+//            maxLines = 1,
+//            overflow = TextOverflow.Ellipsis,
+//        )
+//        Text(
+//            text = tank.nation,
+//            style = MaterialTheme.typography.bodyMedium,
+//            color = MaterialTheme.colorScheme.onSurfaceVariant,
+//            maxLines = 1,
+//            overflow = TextOverflow.Ellipsis,
+//        )
 
         Spacer(modifier = Modifier.height(Grid.d1))
         Text(
@@ -114,20 +114,20 @@ fun TankCardVertical(tank: Tank, /*tankStatistics: TankComparable,*/ modifier: M
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
-//        Text(
-//            text = "Aim Time: ${tankStatistics.gunAimTime}",
-//            style = MaterialTheme.typography.bodyMedium,
-//            color = MaterialTheme.colorScheme.onSurfaceVariant,
-//            maxLines = 1,
-//            overflow = TextOverflow.Ellipsis,
-//        )
-//        Text(
-//            text = "Reload Time: ${tankStatistics.gunReloadTime}",
-//            style = MaterialTheme.typography.bodyMedium,
-//            color = MaterialTheme.colorScheme.onSurfaceVariant,
-//            maxLines = 1,
-//            overflow = TextOverflow.Ellipsis,
-//        )
+        Text(
+            text = "Aim Time: ${tankStatistics.gunAimTime}",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
+        Text(
+            text = "Reload Time: ${tankStatistics.gunReloadTime}",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
     }
 }
 

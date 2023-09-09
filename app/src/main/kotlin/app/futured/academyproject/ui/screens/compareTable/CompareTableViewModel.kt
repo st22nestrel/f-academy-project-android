@@ -22,7 +22,18 @@ class CompareTableViewModel @Inject constructor(
             onNext {
                 Timber.d("Tanks: $it")
 
-                viewState.tanks = it.toPersistentList()
+                viewState.tanksComparable = it.toPersistentList()
+            }
+            onError { error ->
+                Timber.e(error)
+            }
+        }
+
+        getTanksSelectedFlowUseCase.execute {
+            onNext {
+                Timber.d("Tanks: $it")
+
+                viewState.tanksComparable = it.toPersistentList()
             }
             onError { error ->
                 Timber.e(error)

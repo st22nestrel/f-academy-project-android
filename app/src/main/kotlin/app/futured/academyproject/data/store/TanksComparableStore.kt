@@ -18,11 +18,11 @@ class TanksComparableStore @Inject constructor(
     private val apiManager: ApiManager
 ){
     //private val comparableTanks = MutableStateFlow<MutableMap<Int, ApiTanksComparable>?>(null)
-    private val comparableTanks = MutableStateFlow<List ApiTanksComparable>?>(null)
+    private val comparableTanks = MutableStateFlow<MutableList<ApiTanksComparable>>(mutableListOf())
 
-    suspend fun downloadComparabletank(id: Int){
-        comparableTanks.value?.put(id, apiManager.getApiComparableTank(id))
-    }
+//    suspend fun downloadComparabletank(id: Int){
+//        comparableTanks.value?.put(id, apiManager.getApiComparableTank(id))
+//    }
 
     //TODO create a more subtle way of downloading details about selected tanks
 //    fun getTanksComparableFlow(selectedTanksIds: List<Int>): Flow<ApiTanksComparable>? =
@@ -34,14 +34,22 @@ class TanksComparableStore @Inject constructor(
 //            getTank(it)
 //        }
 
-    fun getTanksComparableFlow(tankIds: List<Int>): Flow<ApiTanksComparable> = comparableTanks.asStateFlow().onStart {
-        comparableTanks.value = apiManager.getApiComparableTank()
-    }.filterNotNull()
-    suspend fun getTank(tankId: Int) : ApiTankComparable? {
-        val tank: ApiTanksComparable? = comparableTanks.value?.get(tankId)
-        if (tank == null) {
-            downloadComparabletank(tankId)
-        }
-        return comparableTanks.value?.get(tankId)?.data?.get(tankId.toString())
-    }
+    fun getTanksComparableFlow(tankIds: List<Int>): Flow<List<ApiTanksComparable>> =
+        comparableTanks.asStateFlow().onStart {
+            comparableTanks.value = apiManager.getApiComparableTanks(tankIds)
+        }.filterNotNull()
+
+
+//        comparableTanks.asStateFlow().onStart {
+//        comparableTanks.value = apiManager.getApiComparableTank()
+//    }.filterNotNull()
+
+
+//    suspend fun getTank(tankId: Int) : ApiTankComparable? {
+//        val tank: ApiTanksComparable? = comparableTanks.value?.get(tankId)
+//        if (tank == null) {
+//            downloadComparabletank(tankId)
+//        }
+//        return comparableTanks.value?.get(tankId)?.data?.get(tankId.toString())
+//    }
 }
