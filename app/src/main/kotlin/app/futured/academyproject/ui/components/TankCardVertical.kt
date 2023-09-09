@@ -41,7 +41,7 @@ import kotlinx.collections.immutable.PersistentList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TankCardVertical(tank: Tank, tankStatistics: TankComparable, modifier: Modifier = Modifier,
+fun TankCardVertical(tank: Tank, /*tankStatistics: TankComparable,*/ modifier: Modifier = Modifier,
              onIconClicked: (tankId: Int) -> Unit = ::onIconClickedPreview ) {
     //TODO convert to lazyColumn maybe?
     Column(
@@ -114,20 +114,20 @@ fun TankCardVertical(tank: Tank, tankStatistics: TankComparable, modifier: Modif
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
-        Text(
-            text = "Aim Time: ${tankStatistics.gunAimTime}",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-        )
-        Text(
-            text = "Reload Time: ${tankStatistics.gunReloadTime}",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-        )
+//        Text(
+//            text = "Aim Time: ${tankStatistics.gunAimTime}",
+//            style = MaterialTheme.typography.bodyMedium,
+//            color = MaterialTheme.colorScheme.onSurfaceVariant,
+//            maxLines = 1,
+//            overflow = TextOverflow.Ellipsis,
+//        )
+//        Text(
+//            text = "Reload Time: ${tankStatistics.gunReloadTime}",
+//            style = MaterialTheme.typography.bodyMedium,
+//            color = MaterialTheme.colorScheme.onSurfaceVariant,
+//            maxLines = 1,
+//            overflow = TextOverflow.Ellipsis,
+//        )
     }
 }
 

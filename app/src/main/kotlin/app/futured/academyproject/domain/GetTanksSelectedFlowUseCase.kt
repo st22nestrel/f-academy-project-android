@@ -20,8 +20,8 @@ class GetTanksSelectedFlowUseCase @Inject constructor (
     private val tanksPersistence: TanksPersistence,
     private val tanksStore: TanksStore,
     private val tanksComparableStore: TanksComparableStore,
-) : FlowUseCase<Unit, List<Pair<Tank, TankComparable>>>() {
-    override fun build(args: Unit): Flow<List<Pair<Tank, TankComparable>>> = combine(
+) : FlowUseCase<Unit, List<Tank>>() {
+    override fun build(args: Unit): Flow<List<Tank>> = combine(
         tanksPersistence.observeTankIdsSelected(),
         tanksStore.getTanksFlow(),
         //tanksComparableStore.getTanksComparableFlow()
@@ -34,16 +34,22 @@ class GetTanksSelectedFlowUseCase @Inject constructor (
 //            it.isSelected = it.id in selectedTankIds
 //        }
         val tanksComparableList: MutableList<TankComparable> = mutableListOf()
-        val tanksList = apiTanks.data.map {
+        val tanksList = apiTanks.data.filter {
+            it.value.id in selectedTankIds
+        }
+        .map {
             val isFavoriteTank = it.value.id in selectedTankIds
             it.value.mapToTank(isFavoriteTank)
         }
-        .filter { it.id in selectedTankIds }
         .sortedWith( compareByDescending(Tank::tier).thenBy(Tank::nation).thenBy(Tank::tankType) )
 
-        tanksList.forEach{tanksComparableList.add(tanksComparableStore.getTank(it.id)!!.mapToTankComparable())}
+//        tanksList.forEach{
+//            val tank = tanksComparableStore.getTank(it.id)
+//            tanksComparableList.add(tank!!.mapToTankComparable())
+//        }
 
 
-        return@combine (tanksList zip tanksComparableList)
+        //return@combine (tanksList zip tanksComparableList)
+        return@combine tanksList
     }
 }

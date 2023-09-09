@@ -13,5 +13,6 @@ import javax.inject.Inject
 
 @ViewModelScoped
 class CompareTableViewState @Inject constructor() : ViewState{
-    var tanks: PersistentList<Pair<Tank, TankComparable>> by mutableStateOf(persistentListOf())
+    //var tanks: PersistentList<Pair<Tank, TankComparable>> by mutableStateOf(persistentListOf())
+    var tanks: PersistentList<Tank> by mutableStateOf(persistentListOf())
 }
