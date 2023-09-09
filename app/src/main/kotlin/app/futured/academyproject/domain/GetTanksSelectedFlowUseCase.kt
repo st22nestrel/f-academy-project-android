@@ -18,12 +18,11 @@ import javax.inject.Inject
 
 class GetTanksSelectedFlowUseCase @Inject constructor (
     private val tanksPersistence: TanksPersistence,
-    private val tanksStore: TanksStore,
     private val tanksComparableStore: TanksComparableStore,
 ) : FlowUseCase<Unit, List<Tank>>() {
     override fun build(args: Unit): Flow<List<Tank>> = combine(
         tanksPersistence.observeTankIdsSelected(),
-        tanksStore.getTanksFlow(),
+        tanksComparableStore.getTanksFlow(tanksPersistence.observeTankIdsSelected()),
         //tanksComparableStore.getTanksComparableFlow()
         //flowOf(TanksProvider().values.first())
     ) { selectedTankIds, apiTanks ->

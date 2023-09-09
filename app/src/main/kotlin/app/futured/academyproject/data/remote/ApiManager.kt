@@ -29,4 +29,17 @@ class ApiManager @Inject constructor(
     } catch (e: Exception) {
         throw ApiExceptionUnknown(e.localizedMessage, e)
     }
+
+    suspend fun getApiComparableTanks(tankIds: List<Int>): List<ApiTanksComparable> {
+        val tanksComparable: MutableMap<Int, ApiTanksComparable> = mutableListOf()
+        try {
+            for (tankId in tankIds) {
+                //tanksComparable.add(apiService.apiComparableTank(tankId))
+                tanksComparable.put(tankId, apiService.apiComparableTank(tankId))
+            }
+        } catch (e: Exception) {
+            throw ApiExceptionUnknown(e.localizedMessage, e)
+        }
+        return tanksComparable
+    }
 }
