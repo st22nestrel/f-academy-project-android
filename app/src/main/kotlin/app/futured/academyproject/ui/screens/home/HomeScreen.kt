@@ -51,6 +51,9 @@ import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.CheckBoxOutlineBlank
+import androidx.compose.material.icons.outlined.CheckBoxOutlineBlank
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Settings
@@ -61,7 +64,6 @@ import app.futured.academyproject.ui.components.TankCard
 fun HomeScreen(
     navigation: NavigationDestinations,
     viewModel: HomeViewModel = hiltViewModel(),
-    tankFilters: Filters = Filters()
 ) {
     with(viewModel) {
         EventsEffect {
@@ -72,7 +74,7 @@ fun HomeScreen(
                 navigation.navigateToCompareTableScreen()
             }
             onEvent<FilterSelectedEvent> {
-                viewModel.filterTanks(tankFilters)
+                viewModel.filterTanks()
             }
         }
 
@@ -80,7 +82,7 @@ fun HomeScreen(
             viewModel,
             viewState.tanks,
             viewState.error,
-            filters = tankFilters
+            filters = viewState.filters
         )
     }
 }
@@ -94,7 +96,7 @@ object Home {
 
         fun tryAgain() = Unit
 
-        fun filterTanks(filters: Filters) = Unit
+        fun filterTanks() = Unit
 
         fun onSelected(tankId: Int) = Unit
     }
@@ -133,7 +135,7 @@ object Home {
                         HomeDropDownMenuFilters(innerPadding, filters, actions)
                         Button(
                             onClick = { actions.navigateToCompareTableScreen() },
-                            modifier = Modifier.padding(innerPadding).padding(start = 120.dp)
+                            modifier = Modifier.padding(innerPadding).padding(start = 220.dp)
                             ) {
                             Text(
                                 text = "Compare", style = MaterialTheme.typography.headlineSmall,
@@ -189,16 +191,22 @@ object Home {
                         DropdownMenuItem(
                             text = { Text(e.toString()) },
                             onClick = {
-                                expanded = false
+                                //expanded = false
                                 if (!filter.selectedValues.contains(e)) {
                                     filter.selectedValues.add(e)
                                     //filter.selectedValues = filter.selectedValues.sorted()
                                 }
-                                actions.filterTanks(filters)
+                                else {
+                                    filter.selectedValues.remove(e)
+                                }
+                                actions.filterTanks()
                                       },
                             leadingIcon = {
                                 Icon(
-                                    Icons.Outlined.Edit,
+                                    imageVector = (
+                                        if (filter.selectedValues.contains(e)) Icons.Filled.Check
+                                        else Icons.Outlined.CheckBoxOutlineBlank
+                                        ),
                                     contentDescription = null
                                 )
                             })

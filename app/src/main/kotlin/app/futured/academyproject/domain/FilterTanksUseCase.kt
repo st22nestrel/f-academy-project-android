@@ -23,6 +23,6 @@ class FilterTanksUseCase @Inject constructor() {
                     e.tier == filterVal
             } )
         }
-        return tanksNew.toPersistentList()
+        return (if (tanksNew.isEmpty()) tanks.toPersistentList() else tanksNew.toPersistentList())
     }
 }

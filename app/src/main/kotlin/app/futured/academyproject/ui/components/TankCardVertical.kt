@@ -117,7 +117,23 @@ fun TankCardVertical(tank: Tank, tankStatistics: TankComparable,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
-
+        Text(
+            text = "Dispersion: ${tankStatistics.gunDispersion}",
+            style = MaterialTheme.typography.bodyMedium,
+            color = (
+                when (tankStatistics.gunDispersion) {
+                    tankStatisticsOutliers!!.gunDispersion.max ->
+                        //MaterialTheme.colorScheme.error
+                        Color.Red
+                    tankStatisticsOutliers!!.gunDispersion.min ->
+                        //MaterialTheme.colorScheme.tertiary
+                        Color.Green
+                    else -> MaterialTheme.colorScheme.onSurfaceVariant
+                }
+                ),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
         Text(
             text = "Aim Time: ${tankStatistics.gunAimTime}",
             style = MaterialTheme.typography.bodyMedium,
@@ -158,6 +174,21 @@ fun TankCardVertical(tank: Tank, tankStatistics: TankComparable,
 //                else
 //                    MaterialTheme.colorScheme.onSurfaceVariant
 //            ) ,
+        )
+        Text(
+            text = "Fire rate: ${tankStatistics.gunFireRate}",
+            style = MaterialTheme.typography.bodyMedium,
+            color = (
+                when (tankStatistics.gunFireRate) {
+                    tankStatisticsOutliers!!.gunFireRate.max ->
+                        //MaterialTheme.colorScheme.error
+                        Color.Red
+                    tankStatisticsOutliers!!.gunFireRate.min ->
+                        //MaterialTheme.colorScheme.tertiary
+                        Color.Green
+                    else -> MaterialTheme.colorScheme.onSurfaceVariant
+                }
+                ),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )

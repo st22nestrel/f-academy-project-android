@@ -1,8 +1,10 @@
 package app.futured.academyproject.util.comparable
 
 data class TanksComparableValueOutliers (
+    var gunDispersion: Outliers<Float> = Outliers(0f,100f),
     var gunAimTime: Outliers<Float> = Outliers(0f,100f),
-    var gunReloadTime: Outliers<Float> = Outliers(0f,100f)
+    var gunReloadTime: Outliers<Float> = Outliers(0f,100f),
+    var gunFireRate : Outliers<Float> = Outliers(0f,100f)
 )
 
 //data class TanksComparableValueOutliers (

@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import app.futured.academyproject.data.model.local.Place
 import app.futured.academyproject.data.model.local.Tank
+import app.futured.academyproject.util.filters.Filters
 import app.futured.arkitekt.core.ViewState
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.collections.immutable.PersistentList
@@ -20,6 +21,8 @@ class HomeViewState @Inject constructor() : ViewState {
     var loadedTanks: PersistentList<Tank> = persistentListOf()
 
     var tanks: PersistentList<Tank> by mutableStateOf(persistentListOf())
+
+    val filters: Filters = Filters()
 
     var error: Throwable? by mutableStateOf(null)
 }

@@ -27,6 +27,12 @@ class GetTanksComparableSelected_And_TankStatisticsOutliersFlowUseCase @Inject c
         val tanksComparable = apiTanksComparable.map{
             val tankComparable = it.data.values.first().mapToTankComparable()
 
+            if (tankStatisticsOutliers.gunDispersion.max < tankComparable.gunDispersion) {
+                tankStatisticsOutliers.gunDispersion.max = tankComparable.gunDispersion
+            } else if (tankStatisticsOutliers.gunDispersion.min > tankComparable.gunDispersion) {
+                tankStatisticsOutliers.gunDispersion.min = tankComparable.gunDispersion
+            }
+
             if (tankStatisticsOutliers.gunAimTime.max < tankComparable.gunAimTime) {
                 tankStatisticsOutliers.gunAimTime.max = tankComparable.gunAimTime
             } else if (tankStatisticsOutliers.gunAimTime.min > tankComparable.gunAimTime) {
@@ -37,6 +43,12 @@ class GetTanksComparableSelected_And_TankStatisticsOutliersFlowUseCase @Inject c
                 tankStatisticsOutliers.gunReloadTime.max = tankComparable.gunReloadTime
             } else if (tankStatisticsOutliers.gunReloadTime.min > tankComparable.gunReloadTime) {
                 tankStatisticsOutliers.gunReloadTime.min = tankComparable.gunReloadTime
+            }
+
+            if (tankStatisticsOutliers.gunFireRate.max < tankComparable.gunFireRate) {
+                tankStatisticsOutliers.gunFireRate.max = tankComparable.gunFireRate
+            } else if (tankStatisticsOutliers.gunFireRate.min > tankComparable.gunFireRate) {
+                tankStatisticsOutliers.gunFireRate.min = tankComparable.gunFireRate
             }
 
             tankComparable

@@ -48,8 +48,8 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    override fun filterTanks(filters: Filters) {
-        viewState.tanks = filterTanksUseCase.invoke(filters, viewState.loadedTanks)
+    override fun filterTanks() {
+        viewState.tanks = filterTanksUseCase.invoke(viewState.filters, viewState.loadedTanks)
     }
 
     override fun onSelected(tankId: Int) {
