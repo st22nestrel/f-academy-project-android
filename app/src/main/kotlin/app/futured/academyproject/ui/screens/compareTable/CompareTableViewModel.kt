@@ -43,6 +43,10 @@ class CompareTableViewModel @Inject constructor(
         }
     }
 
+    override fun navigateToDetailScreen(tankId: Int) {
+        sendEvent(NavigateToDetailEvent(tankId))
+    }
+
     override fun navigateBack() {
         sendEvent(NavigateBackEvent)
     }

@@ -32,6 +32,7 @@ import app.futured.academyproject.navigation.NavigationDestinations
 import app.futured.academyproject.tools.arch.EventsEffect
 import app.futured.academyproject.tools.arch.onEvent
 import app.futured.academyproject.ui.components.TankCardVertical
+import app.futured.academyproject.ui.screens.home.NavigateToDetailEvent
 import app.futured.academyproject.ui.theme.Grid
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.PersistentMap
@@ -43,6 +44,9 @@ fun CompareTableScreeen(
 ){
     with(viewModel){
         EventsEffect{
+            onEvent<NavigateToDetailEvent> {
+                navigation.navigateToDetailScreen(tankId = it.tankId)
+            }
             onEvent<NavigateBackEvent> {
                 navigation.popBackStack()
             }
@@ -59,7 +63,7 @@ object CompareTable {
 
     interface Actions {
         fun navigateBack() = Unit
-        fun onTankIconClick(tankId: Int) = Unit
+        fun navigateToDetailScreen(tankId: Int) = Unit
     }
 
     object PreviewActions : Actions
@@ -99,7 +103,7 @@ object CompareTable {
                                     TankCardVertical(
                                         tank = tank,
                                         tankStatistics = it,
-                                        onIconClicked = actions::onTankIconClick
+                                        onIconClicked = actions::navigateToDetailScreen
                                     )
                                 }
                             }

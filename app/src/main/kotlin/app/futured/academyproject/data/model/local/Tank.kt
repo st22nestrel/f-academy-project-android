@@ -1,9 +1,12 @@
 package app.futured.academyproject.data.model.local
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+
 data class Tank(
     val id: Int,
     var isFavourite: Boolean = false,
-    var isSelected: Boolean = false,
+    var isSelected: MutableState<Boolean> = mutableStateOf(false),
     val isPremium: Boolean,
     val tankType: String,
     val tier: Int,

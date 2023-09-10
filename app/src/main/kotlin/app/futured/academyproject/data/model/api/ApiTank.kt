@@ -1,5 +1,6 @@
 package app.futured.academyproject.data.model.api
 
+import androidx.compose.runtime.mutableStateOf
 import app.futured.academyproject.data.model.local.Tank
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -30,7 +31,7 @@ fun ApiTank.mapToTank(isFavourite: Boolean,
                       isSelected: Boolean = false) = Tank(
     id = id,
     isFavourite = isFavourite,
-    isSelected = isSelected,
+    isSelected = mutableStateOf(isSelected),
     isPremium = premium,
     tankType = tankType,
     tier = tier,

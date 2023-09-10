@@ -7,6 +7,7 @@ import app.futured.academyproject.data.store.TanksStore
 import app.futured.academyproject.tools.preview.TanksProvider
 import app.futured.arkitekt.crusecases.FlowUseCase
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOf
 import javax.inject.Inject
@@ -16,8 +17,8 @@ class GetTanksFlowUseCase @Inject constructor (
     private val tanksStore: TanksStore,
 ) : FlowUseCase<Unit, List<Tank>>() {
     override fun build(args: Unit): Flow<List<Tank>> = combine(
-        tanksPersistence.observeTankIdsFavorite(),
-        tanksPersistence.observeTankIdsSelected(),
+        flowOf(tanksPersistence.getTankIdsFavorite()),
+        flowOf(tanksPersistence.getTankIdsSelected()),
         tanksStore.getTanksFlow()
         //flowOf(TanksProvider().values.first())
     ) { favouriteTankIds, selectedTankIds, apiTanks  ->

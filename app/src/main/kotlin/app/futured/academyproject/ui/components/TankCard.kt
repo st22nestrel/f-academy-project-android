@@ -52,7 +52,7 @@ fun TankCard(tank: Tank, onClick: (Int) -> Unit, modifier: Modifier = Modifier,
             .padding(vertical = Grid.d2, horizontal = Grid.d4)
             .fillMaxWidth(),
     ) {
-        var selected by remember { mutableStateOf(tank.isSelected)}
+        //var selected by remember { mutableStateOf(tank.isSelected)}
         Card(
             colors = CardDefaults.cardColors(),
             modifier = Modifier
@@ -133,12 +133,12 @@ fun TankCard(tank: Tank, onClick: (Int) -> Unit, modifier: Modifier = Modifier,
         IconButton(
             onClick = {
                 onSelected(tank.id)
-                //tank.isSelected = !tank.isSelected
-                selected = !selected
+                tank.isSelected.value = !tank.isSelected.value
+                //selected = !selected
             }
         ){
             Icon(
-                imageVector = if (selected) Icons.Filled.RemoveCircle else Icons.Outlined.AddBox,
+                imageVector = if (tank.isSelected.value) Icons.Filled.RemoveCircle else Icons.Outlined.AddBox,
                 tint = MaterialTheme.colorScheme.errorContainer,
                 contentDescription = null
             )

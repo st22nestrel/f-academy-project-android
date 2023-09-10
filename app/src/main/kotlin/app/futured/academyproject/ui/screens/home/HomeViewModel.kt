@@ -9,8 +9,10 @@ import app.futured.academyproject.tools.arch.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.CoroutineScope
 import timber.log.Timber
 import javax.inject.Inject
+import kotlin.system.exitProcess
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -26,6 +28,11 @@ class HomeViewModel @Inject constructor(
 
     private fun loadApiTanks() {
         viewState.error = null
+
+        //This is not working, getTanksFlowUseCase gets fired every time any
+        //of its observable arguments get changed
+        //MonkeyPatch solution to reloading and reinitializing Home screen
+        //if(!viewState.loadedTanks.isEmpty()) return
 
         getTanksFlowUseCase.execute {
             onNext {
