@@ -4,7 +4,7 @@ import app.futured.academyproject.data.model.local.Tank
 import app.futured.academyproject.domain.FilterTanksUseCase
 import app.futured.academyproject.domain.GetTanksFlowUseCase
 import app.futured.academyproject.domain.SetSelectedTankUseCase
-import app.futured.academyproject.domain.util.filters.Filters
+import app.futured.academyproject.util.filters.Filters
 import app.futured.academyproject.tools.arch.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.PersistentList

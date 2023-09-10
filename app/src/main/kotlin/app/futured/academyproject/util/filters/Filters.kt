@@ -1,4 +1,4 @@
-package app.futured.academyproject.domain.util.filters
+package app.futured.academyproject.util.filters
 
 class Filters (
     val tierFilter: Filter = TierFilter()

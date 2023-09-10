@@ -1,7 +1,7 @@
 package app.futured.academyproject.domain
 
 import app.futured.academyproject.data.model.local.Tank
-import app.futured.academyproject.domain.util.filters.Filters
+import app.futured.academyproject.util.filters.Filters
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList

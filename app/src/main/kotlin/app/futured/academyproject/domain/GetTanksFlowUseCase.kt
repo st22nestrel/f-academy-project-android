@@ -33,7 +33,7 @@ class GetTanksFlowUseCase @Inject constructor (
             it.value.mapToTank(isFavourite, isSelected)
         }.
         //apiTanks.sortedWith( compareByDescending(Tank::tier).thenBy(Tank::nation).thenBy(Tank::tankType) )
-        sortedWith( compareByDescending(Tank::tier).thenBy(Tank::tankType).thenBy(Tank::nation) )
+        sortedWith( compareByDescending(Tank::tier).thenBy(Tank::nation).thenBy(Tank::tankType) )
         //sortedWith( compareBy(Tank::tier, Tank::nation, Tank::tankType))
     }
 }

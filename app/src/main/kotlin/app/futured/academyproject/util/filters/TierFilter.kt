@@ -1,4 +1,4 @@
-package app.futured.academyproject.domain.util.filters
+package app.futured.academyproject.util.filters
 
 class TierFilter : Filter {
     override val description: String = "Tier"

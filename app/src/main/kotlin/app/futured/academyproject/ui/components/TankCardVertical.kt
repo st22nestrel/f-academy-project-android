@@ -26,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
@@ -35,14 +36,16 @@ import app.futured.academyproject.data.model.local.Tank
 import app.futured.academyproject.data.model.local.TankComparable
 import app.futured.academyproject.tools.preview.TanksProvider
 import app.futured.academyproject.ui.theme.Grid
+import app.futured.academyproject.util.comparable.TanksComparableValueOutliers
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import kotlinx.collections.immutable.PersistentList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TankCardVertical(tank: Tank, tankStatistics: TankComparable, modifier: Modifier = Modifier,
-             onIconClicked: (tankId: Int) -> Unit = ::onIconClickedPreview ) {
+fun TankCardVertical(tank: Tank, tankStatistics: TankComparable,
+                     tankStatisticsOutliers: TanksComparableValueOutliers?, modifier: Modifier = Modifier,
+                     onIconClicked: (tankId: Int) -> Unit = ::onIconClickedPreview ) {
     //TODO convert to lazyColumn maybe?
     Column(
         modifier = modifier
@@ -108,23 +111,53 @@ fun TankCardVertical(tank: Tank, tankStatistics: TankComparable, modifier: Modif
 
         Spacer(modifier = Modifier.height(Grid.d1))
         Text(
-            text = "Tank statistics",
+            text = "Tank gun statistics",
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.onSurface,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
+
         Text(
             text = "Aim Time: ${tankStatistics.gunAimTime}",
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = (
+                when (tankStatistics.gunAimTime) {
+                    tankStatisticsOutliers!!.gunAimTime.max ->
+                        //MaterialTheme.colorScheme.error
+                        Color.Red
+                    tankStatisticsOutliers!!.gunAimTime.min ->
+                        //MaterialTheme.colorScheme.tertiary
+                        Color.Green
+                    else -> MaterialTheme.colorScheme.onSurfaceVariant
+                }
+                ),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
         Text(
             text = "Reload Time: ${tankStatistics.gunReloadTime}",
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = (
+                when (tankStatistics.gunReloadTime) {
+                    tankStatisticsOutliers!!.gunReloadTime.max ->
+                        //MaterialTheme.colorScheme.error
+                        Color.Red
+                    tankStatisticsOutliers!!.gunReloadTime.min ->
+                        //MaterialTheme.colorScheme.tertiary
+                        Color.Green
+                    else -> MaterialTheme.colorScheme.onSurfaceVariant
+                }
+                ),
+                //TODO use this when calculating orange... color
+//            (
+//                if (tankStatistics.gunReloadTime == tankStatisticsOutliers.gunReloadTime.first)
+//                    MaterialTheme.colorScheme.error
+//                else if (tankStatistics.gunReloadTime == tankStatisticsOutliers.gunReloadTime.second)
+//                    MaterialTheme.colorScheme.onSurfaceVariant
+//                else
+//                    MaterialTheme.colorScheme.onSurfaceVariant
+//            ) ,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )

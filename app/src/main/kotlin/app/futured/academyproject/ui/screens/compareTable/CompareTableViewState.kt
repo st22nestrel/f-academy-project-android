@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import app.futured.academyproject.data.model.local.Tank
 import app.futured.academyproject.data.model.local.TankComparable
+import app.futured.academyproject.util.comparable.TanksComparableValueOutliers
 import app.futured.arkitekt.core.ViewState
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.collections.immutable.PersistentList
@@ -18,5 +19,6 @@ class CompareTableViewState @Inject constructor() : ViewState{
     //var tanks: PersistentList<Pair<Tank, TankComparable>> by mutableStateOf(persistentListOf())
     var tanks: PersistentList<Tank> by mutableStateOf(persistentListOf())
     var tanksComparable: PersistentMap<Int, TankComparable> by mutableStateOf(persistentMapOf())
+    var tanksComparableValueOutliers: TanksComparableValueOutliers? = null
     //var tanksComparable: PersistentList<TankComparable> by mutableStateOf(persistentListOf())
 }

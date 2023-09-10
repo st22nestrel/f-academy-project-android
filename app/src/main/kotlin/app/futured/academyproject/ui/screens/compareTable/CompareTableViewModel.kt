@@ -1,20 +1,24 @@
 package app.futured.academyproject.ui.screens.compareTable
 
 import app.futured.academyproject.data.model.local.TankComparable
+import app.futured.academyproject.domain.CompareTanksComparableUseCase
 import app.futured.academyproject.domain.GetTanksComparableSelectedFlowUseCase
+import app.futured.academyproject.domain.GetTanksComparableSelected_And_TankStatisticsOutliersFlowUseCase
 import app.futured.academyproject.domain.GetTanksSelectedFlowUseCase
 import app.futured.academyproject.tools.arch.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentMap
+import kotlinx.coroutines.awaitAll
 import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class CompareTableViewModel @Inject constructor(
     override val viewState: CompareTableViewState,
-    private val getTanksComparableSelectedFlowUseCase: GetTanksComparableSelectedFlowUseCase,
-    private val getTanksSelectedFlowUseCase: GetTanksSelectedFlowUseCase
+    private val getTanksComparableSelectedFlowUseCase: GetTanksComparableSelected_And_TankStatisticsOutliersFlowUseCase,
+    private val getTanksSelectedFlowUseCase: GetTanksSelectedFlowUseCase,
+    private val compareTanksComparableUseCase: CompareTanksComparableUseCase
 ) : BaseViewModel<CompareTableViewState>(), CompareTable.Actions {
     init {
         loadTanks()
@@ -25,7 +29,9 @@ class CompareTableViewModel @Inject constructor(
             onNext {
                 Timber.d("Tanks: $it")
 
-                viewState.tanksComparable = it.associateBy(TankComparable::id).toPersistentMap()
+                viewState.tanksComparable = it.second.associateBy(TankComparable::id).toPersistentMap()
+
+                viewState.tanksComparableValueOutliers = it.first
             }
             onError { error ->
                 Timber.e(error)
@@ -41,6 +47,8 @@ class CompareTableViewModel @Inject constructor(
                 Timber.e(error)
             }
         }
+
+
     }
 
     override fun navigateToDetailScreen(tankId: Int) {

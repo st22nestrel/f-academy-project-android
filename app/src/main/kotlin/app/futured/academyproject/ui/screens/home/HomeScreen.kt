@@ -54,7 +54,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Settings
-import app.futured.academyproject.domain.util.filters.Filters
+import app.futured.academyproject.util.filters.Filters
 import app.futured.academyproject.ui.components.TankCard
 
 @Composable
@@ -110,7 +110,7 @@ object Home {
         filters: Filters,
         modifier: Modifier = Modifier,
 
-    ) {
+        ) {
         val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
         Scaffold(

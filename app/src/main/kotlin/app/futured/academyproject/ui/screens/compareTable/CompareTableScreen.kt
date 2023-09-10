@@ -34,11 +34,12 @@ import app.futured.academyproject.tools.arch.onEvent
 import app.futured.academyproject.ui.components.TankCardVertical
 import app.futured.academyproject.ui.screens.home.NavigateToDetailEvent
 import app.futured.academyproject.ui.theme.Grid
+import app.futured.academyproject.util.comparable.TanksComparableValueOutliers
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.PersistentMap
 
 @Composable
-fun CompareTableScreeen(
+fun CompareTableScreen(
     navigation: NavigationDestinations,
     viewModel: CompareTableViewModel = hiltViewModel(),
 ){
@@ -54,7 +55,8 @@ fun CompareTableScreeen(
         CompareTable.Content(
             viewModel,
             viewState.tanks,
-            viewState.tanksComparable
+            viewState.tanksComparable,
+            viewState.tanksComparableValueOutliers
         )
     }
 }
@@ -75,6 +77,7 @@ object CompareTable {
         //tanks: PersistentList<Pair<Tank,TankComparable>>,
         tanks: PersistentList<Tank>,
         tanksComparable: PersistentMap<Int, TankComparable>,
+        tanksComparableValueOutliers: TanksComparableValueOutliers?,
         //tanksComparable: PersistentList<TankComparable>,
         modifier: Modifier = Modifier,
     ){
@@ -103,6 +106,7 @@ object CompareTable {
                                     TankCardVertical(
                                         tank = tank,
                                         tankStatistics = it,
+                                        tankStatisticsOutliers = tanksComparableValueOutliers,
                                         onIconClicked = actions::navigateToDetailScreen
                                     )
                                 }
