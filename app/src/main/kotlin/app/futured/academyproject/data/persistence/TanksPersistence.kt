@@ -1,5 +1,6 @@
 package app.futured.academyproject.data.persistence
 
+import app.futured.academyproject.data.model.local.Tank
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,8 +14,10 @@ class TanksPersistence @Inject constructor(
     companion object {
         private const val TANK_IDS_FAVORITE_KEY = "TANK_IDS_FAVORITE_KEY"
         private const val TANK_IDS_SELECTED_KEY = "TANK_IDS_SELECTED_KEY"
+        private const val TANK_LIST_KEY = "TANK_XAYS_LIST_KEY"
     }
 
+    /// Tanks Favorite
     private val tankIdsFavoriteFlow: MutableStateFlow<List<Int>> = MutableStateFlow(
         persistence.getOrNull(TANK_IDS_FAVORITE_KEY) ?: emptyList()
     )
@@ -23,7 +26,7 @@ class TanksPersistence @Inject constructor(
 
     fun getTankIdsFavorite(): List<Int> = persistence.getOrNull(TANK_IDS_FAVORITE_KEY) ?: emptyList()
 
-    fun setTankIdsFavorite(tankIds: List<Int>) {
+    private fun setTankIdsFavorite(tankIds: List<Int>) {
         persistence[TANK_IDS_FAVORITE_KEY] = tankIds
         tankIdsFavoriteFlow.value = tankIds
     }
@@ -39,6 +42,9 @@ class TanksPersistence @Inject constructor(
         setTankIdsFavorite(tankIds)
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    /// Tanks Selected
+
     private val tankIdsSelectedFlow: MutableStateFlow<List<Int>> = MutableStateFlow(
         persistence.getOrNull(TANK_IDS_SELECTED_KEY) ?: emptyList()
     )
@@ -47,7 +53,7 @@ class TanksPersistence @Inject constructor(
 
     fun getTankIdsSelected(): List<Int> = persistence.getOrNull(TANK_IDS_SELECTED_KEY) ?: emptyList()
 
-    fun setTankIdsSelected(tankIds: List<Int>) {
+    private fun setTankIdsSelected(tankIds: List<Int>) {
         persistence[TANK_IDS_SELECTED_KEY] = tankIds
         tankIdsSelectedFlow.value = tankIds
     }
@@ -62,4 +68,22 @@ class TanksPersistence @Inject constructor(
         }
         setTankIdsSelected(tankIds)
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    /// Tank List
+
+    private val tankListFlow: MutableStateFlow<List<Tank>> = MutableStateFlow(
+        persistence.getOrNull(TANK_LIST_KEY) ?: emptyList()
+    )
+
+    fun observeTankList(): Flow<List<Tank>> = tankListFlow.asStateFlow()
+
+    fun getTankList(): List<Tank> = persistence.getOrNull(TANK_LIST_KEY) ?: emptyList()
+
+    fun setTankList(tankList: List<Tank>) {
+        persistence[TANK_LIST_KEY] = tankList
+        tankListFlow.value = tankList
+    }
+
+
 }

@@ -23,17 +23,20 @@ class GetTanksFlowUseCase @Inject constructor (
         //flowOf(TanksProvider().values.first())
     ) { favouriteTankIds, selectedTankIds, apiTanks  ->
 
-//        apiTanks.forEach {
-//            it.isSelected = it.id in selectedTankIds
-//            it.isFavourite = it.id in favouriteTankIds
-//        }
+
         apiTanks.data.map {
             val isFavourite = it.value.id in favouriteTankIds
             val isSelected = it.value.id in selectedTankIds
             it.value.mapToTank(isFavourite, isSelected)
         }.
-        //apiTanks.sortedWith( compareByDescending(Tank::tier).thenBy(Tank::nation).thenBy(Tank::tankType) )
-        sortedWith( compareByDescending(Tank::tier).thenBy(Tank::nation).thenBy(Tank::tankType) )
+        sortedWith( compareByDescending(Tank::tier).thenBy(Tank::nation).thenBy(Tank::tankType) )//    .sortedWith( compareByDescending(Tank::tier).thenBy(Tank::nation).thenBy(Tank::tankType) )
+
+//        apiTanks.forEach {
+//            it.isSelected.value = it.id in selectedTankIds
+//            it.isFavourite = it.id in favouriteTankIds
+//        }
+//        apiTanks.sortedWith( compareByDescending(Tank::tier).thenBy(Tank::nation).thenBy(Tank::tankType) )
+
         //sortedWith( compareBy(Tank::tier, Tank::nation, Tank::tankType))
     }
 }

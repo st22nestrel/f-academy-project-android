@@ -14,15 +14,21 @@ class FilterTanksUseCase @Inject constructor() {
         tanks: PersistentList<Tank>
     ): PersistentList<Tank> {
         val tanksNew: MutableList<Tank> = mutableListOf()
-        filters.tierFilter.selectedValues.forEach{ filterVal->
-            tanksNew.addAll(
-                tanks.filter { e->
-                    Timber.d("Comparison result: ${e.tier == filterVal}")
-                    Timber.d("tank tier: ${e.tier}")
-                    Timber.d("selected tier: ${filterVal}")
-                    e.tier == filterVal
-            } )
+
+        val tierFilter = filters.tierFilter.selectedValues
+        val nationFilter = filters.nationFilter.selectedValues
+        val typeFilter = filters.typeFilter.selectedValues
+
+        tanks.forEach { tank ->
+            val isTierMatch = tierFilter.isEmpty() || tierFilter.contains(tank.tier)
+            val isNationMatch = nationFilter.isEmpty() || nationFilter.contains(tank.nation)
+            val isTypeMatch = typeFilter.isEmpty() || typeFilter.contains(tank.tankType)
+
+            if (isTierMatch && isNationMatch && isTypeMatch) {
+                tanksNew.add(tank)
+            }
         }
-        return (if (tanksNew.isEmpty()) tanks.toPersistentList() else tanksNew.toPersistentList())
+
+        return if (tanksNew.isEmpty()) tanks.toPersistentList() else tanksNew.toPersistentList()
     }
 }

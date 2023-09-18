@@ -180,10 +180,10 @@ fun TankCardVertical(tank: Tank, tankStatistics: TankComparable,
             style = MaterialTheme.typography.bodyMedium,
             color = (
                 when (tankStatistics.gunFireRate) {
-                    tankStatisticsOutliers!!.gunFireRate.max ->
+                    tankStatisticsOutliers!!.gunFireRate.min ->
                         //MaterialTheme.colorScheme.error
                         Color.Red
-                    tankStatisticsOutliers!!.gunFireRate.min ->
+                    tankStatisticsOutliers!!.gunFireRate.max ->
                         //MaterialTheme.colorScheme.tertiary
                         Color.Green
                     else -> MaterialTheme.colorScheme.onSurfaceVariant

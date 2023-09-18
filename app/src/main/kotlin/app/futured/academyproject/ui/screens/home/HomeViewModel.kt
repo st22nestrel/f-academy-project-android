@@ -1,6 +1,7 @@
 package app.futured.academyproject.ui.screens.home
 
 import app.futured.academyproject.data.model.local.Tank
+import app.futured.academyproject.data.persistence.TanksPersistence
 import app.futured.academyproject.domain.FilterTanksUseCase
 import app.futured.academyproject.domain.GetTanksFlowUseCase
 import app.futured.academyproject.domain.SetSelectedTankUseCase
@@ -19,7 +20,8 @@ class HomeViewModel @Inject constructor(
     override val viewState: HomeViewState,
     private val getTanksFlowUseCase: GetTanksFlowUseCase,
     private val filterTanksUseCase: FilterTanksUseCase,
-    private val setSelectedTankUseCase: SetSelectedTankUseCase
+    private val setSelectedTankUseCase: SetSelectedTankUseCase,
+    private val tanksPersistence: TanksPersistence
 ) : BaseViewModel<HomeViewState>(), Home.Actions {
 
     init {
@@ -34,16 +36,25 @@ class HomeViewModel @Inject constructor(
         //MonkeyPatch solution to reloading and reinitializing Home screen
         //if(!viewState.loadedTanks.isEmpty()) return
 
-        getTanksFlowUseCase.execute {
-            onNext {
-                Timber.d("Tanks: $it")
+        if (tanksPersistence.getTankList().isNotEmpty()){
+            viewState.loadedTanks = tanksPersistence.getTankList().toPersistentList()
+            viewState.tanks = tanksPersistence.getTankList().toPersistentList()
+        }
+        else{
+            getTanksFlowUseCase.execute {
+                onNext {
+                    Timber.d("Tanks: $it")
 
-                viewState.loadedTanks = it.toPersistentList()
-                viewState.tanks = it.toPersistentList()
-            }
-            onError { error ->
-                Timber.e(error)
-                viewState.error = error
+                    viewState.loadedTanks = it.toPersistentList()
+                    viewState.tanks = it.toPersistentList()
+                    if (it.isNotEmpty()){
+                        tanksPersistence.setTankList(it)
+                    }
+                }
+                onError { error ->
+                    Timber.e(error)
+                    viewState.error = error
+                }
             }
         }
     }

@@ -57,6 +57,12 @@ import androidx.compose.material.icons.outlined.CheckBoxOutlineBlank
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.LargeTopAppBar
+import androidx.compose.material3.MediumTopAppBar
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import app.futured.academyproject.util.filters.Filters
 import app.futured.academyproject.ui.components.TankCard
 
@@ -118,7 +124,7 @@ object Home {
         Scaffold(
             modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             topBar = {
-                HomeTopAppBar(scrollBehavior)
+                HomeTopAppBar(scrollBehavior, actions)
             },
             bottomBar = {
 
@@ -133,14 +139,6 @@ object Home {
                     }
                     tanks.isNotEmpty() -> {
                         HomeDropDownMenuFilters(innerPadding, filters, actions)
-                        Button(
-                            onClick = { actions.navigateToCompareTableScreen() },
-                            modifier = Modifier.padding(innerPadding).padding(start = 220.dp)
-                            ) {
-                            Text(
-                                text = "Compare", style = MaterialTheme.typography.headlineSmall,
-                            )
-                        }
                         LazyColumn(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.spacedBy(Grid.d1),
@@ -165,13 +163,14 @@ object Home {
 
     @Composable
     fun HomeDropDownMenuFilters(innerPadding: PaddingValues, filters: Filters, actions: Actions) {
-        var expanded by remember { mutableStateOf(false) }
+
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .padding(innerPadding)
         ) { filters.iterator().forEach { filter ->
+                var expanded by remember { mutableStateOf(false) }
                 Button(
                     onClick = { expanded = true },
                     modifier = Modifier
@@ -180,38 +179,39 @@ object Home {
                     Text(
                         text = filter.description, style = MaterialTheme.typography.headlineSmall,
                     )
-                }
-                DropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false },
-                    modifier = Modifier
-                        .padding(vertical = Grid.d2, horizontal = Grid.d2),
-                ) {
-                    filter.values.forEach { e ->
-                        DropdownMenuItem(
-                            text = { Text(e.toString()) },
-                            onClick = {
-                                //expanded = false
-                                if (!filter.selectedValues.contains(e)) {
-                                    filter.selectedValues.add(e)
-                                    //filter.selectedValues = filter.selectedValues.sorted()
-                                }
-                                else {
-                                    filter.selectedValues.remove(e)
-                                }
-                                actions.filterTanks()
-                                      },
-                            leadingIcon = {
-                                Icon(
-                                    imageVector = (
-                                        if (filter.selectedValues.contains(e)) Icons.Filled.Check
-                                        else Icons.Outlined.CheckBoxOutlineBlank
-                                        ),
-                                    contentDescription = null
-                                )
-                            })
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false },
+//                        modifier = Modifier
+//                            .padding(top = Grid.d2),
+                    ) {
+                        filter.values.forEach { e ->
+                            DropdownMenuItem(
+                                text = { Text(e.toString()) },
+                                onClick = {
+                                    //expanded = false
+                                    if (!filter.selectedValues.contains(e)) {
+                                        filter.selectedValues.add(e)
+                                        //filter.selectedValues = filter.selectedValues.sorted()
+                                    }
+                                    else {
+                                        filter.selectedValues.remove(e)
+                                    }
+                                    actions.filterTanks()
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = (
+                                            if (filter.selectedValues.contains(e)) Icons.Filled.Check
+                                            else Icons.Outlined.CheckBoxOutlineBlank
+                                            ),
+                                        contentDescription = null
+                                    )
+                                })
+                        }
                     }
                 }
+
             }
         }
     }
@@ -219,8 +219,8 @@ object Home {
 
     @Composable
     @OptIn(ExperimentalMaterial3Api::class)
-    private fun HomeTopAppBar(scrollBehavior: TopAppBarScrollBehavior) {
-        TopAppBar(
+    private fun HomeTopAppBar(scrollBehavior: TopAppBarScrollBehavior, actions: Actions) {
+        MediumTopAppBar(
             title = {
                 Text(
                     stringResource(R.string.app_map_name),
@@ -242,6 +242,21 @@ object Home {
             ),
             scrollBehavior = scrollBehavior,
             actions = {
+                Button(
+                    onClick = { actions.navigateToCompareTableScreen() },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        contentColor = MaterialTheme.colorScheme.secondary,
+//                        disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+//                        disabledContentColor = MaterialTheme.colorScheme.secondary
+                    )
+                    //colors = MaterialTheme.colorScheme.secondary
+                ) {
+                    Text(
+                        text = "Compare selected tanks", style = MaterialTheme.typography.headlineSmall,
+                    )
+                }
+
                 /*IconButton(onClick = { State.expanded = !State.expanded }) { // toggle button for the menu
                     Icon(Icons.Filled.MoreVert, "More") // icon for the menu
                 }
