@@ -3,16 +3,20 @@ package app.futured.academyproject.injection.modules
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Resources
+import androidx.compose.runtime.MutableState
 import androidx.preference.PreferenceManager
+//import app.futured.academyproject.tools.serialization.MutableStateSerializer
 import app.futured.academyproject.tools.serialization.ZonedDateTimeSerializer
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.serialization.builtins.serializer
 import java.time.ZonedDateTime
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.contextual
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -28,6 +32,7 @@ class ApplicationModule {
         isLenient = true
         serializersModule = SerializersModule {
             contextual(ZonedDateTime::class, ZonedDateTimeSerializer)
+            //contextual(MutableState::class, MutableStateSerializer(Boolean.serializer()))
         }
     }
 

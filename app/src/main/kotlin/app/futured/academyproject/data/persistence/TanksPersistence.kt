@@ -14,7 +14,7 @@ class TanksPersistence @Inject constructor(
     companion object {
         private const val TANK_IDS_FAVORITE_KEY = "TANK_IDS_FAVORITE_KEY"
         private const val TANK_IDS_SELECTED_KEY = "TANK_IDS_SELECTED_KEY"
-        private const val TANK_LIST_KEY = "TANK_XAYS_LIST_KEY"
+        private const val TANK_LIST_KEY = "TANK_LIST_KEY"
     }
 
     /// Tanks Favorite
